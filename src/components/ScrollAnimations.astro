@@ -1,12 +1,12 @@
 <script>
-  import { animate, scroll, inView } from "motion"
+  import { animate, inView } from "motion"
 
   inView(
-    "#projects section, #skills section, #contact section",
+    "#projects, #skills, #contact",
     ({ target }) => {
       animate(
         target,
-        { opacity: [0, 1], transform: ["translateY(30px)", "translateY(0)"] },
+        { opacity: [0, 1], transform: ["translateY(20px)", "translateY(0)"] },
         { duration: 0.6, easing: "ease-out" }
       )
     },
@@ -14,26 +14,14 @@
   )
 
   inView(
-    ".grid > div, .grid > a",
+    "#projects .grid > a, #skills .grid > div",
     ({ target }) => {
       animate(
         target,
-        { opacity: [0, 1], transform: ["scale(0.95)", "scale(1)"] },
+        { opacity: [0, 1], transform: ["scale(0.98)", "scale(1)"] },
         { duration: 0.4, easing: "ease-out" }
       )
     },
     { amount: 0.15 }
-  )
-
-  inView(
-    ".animate-marquee",
-    ({ target }) => {
-      animate(
-        target,
-        { opacity: [0, 1] },
-        { duration: 0.8, easing: "ease-out" }
-      )
-    },
-    { amount: 0.3 }
   )
 </script>
