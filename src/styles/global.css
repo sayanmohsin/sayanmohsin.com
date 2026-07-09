@@ -1,70 +1,32 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg-primary: #050505;
-  --color-bg-surface: #0a0a0a;
-  --color-bg-card: #0c0c0c;
-  --color-bg-hover: #111111;
-  --color-orange-500: #ff6b00;
-  --color-orange-400: #ff8c00;
-  --color-orange-300: #ffa726;
-  --color-green-500: #00ff88;
-  --color-green-400: #33ff99;
-  --color-green-300: #66ffaa;
-  --color-yellow-500: #ffd700;
-  --color-yellow-400: #ffde33;
-  --color-yellow-300: #ffe566;
-  --color-text-primary: #f5f5f5;
+  --color-bg-primary: #0a0a0a;
+  --color-bg-surface: #121212;
+  --color-bg-card: #141414;
+  --color-bg-hover: #1a1a1a;
+  --color-accent: #ff6b00;
+  --color-accent-hover: #e65c00;
+  --color-accent-subtle: #ff6b0015;
+  --color-accent-glow: #ff6b00;
+  --color-text-primary: #ededed;
   --color-text-muted: #666666;
   --color-text-dim: #444444;
-  --color-border: #1a1a1a;
+  --color-text-subtle: #2a2a2a;
+  --color-border: #1e1e1e;
+  --color-border-hover: #2a2a2a;
   --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
-  --font-display: "Space Grotesk", system-ui, sans-serif;
-  --animate-wave: wave 3s ease-in-out infinite;
-  --animate-pulse-dot: pulse-dot 2s ease-in-out infinite;
-  --animate-marquee: marquee 30s linear infinite;
-  --animate-fade-up: fade-up 0.6s ease-out forwards;
-}
-
-@keyframes wave {
-  0%, 100% { transform: scaleY(0.3); }
-  50% { transform: scaleY(1); }
-}
-
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--color-green-500); }
-  50% { opacity: 0.5; box-shadow: 0 0 8px var(--color-green-500); }
-}
-
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-@keyframes fade-up {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-@keyframes signal-sweep {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #1a1a1a transparent;
+  scrollbar-color: #1e1e1e transparent;
 }
 
 ::selection {
-  background: #ff6b0033;
-  color: #f5f5f5;
+  background: #ff6b0025;
+  color: #ededed;
 }
 
 html {
@@ -75,101 +37,20 @@ body {
   background: var(--color-bg-primary);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.glow-orange {
-  box-shadow: 0 0 15px #ff6b0040, 0 0 30px #ff6b0020;
+.accent-glow {
+  box-shadow: 0 0 15px #ff6b0025, 0 0 30px #ff6b0010;
 }
 
-.glow-green {
-  box-shadow: 0 0 15px #00ff8840, 0 0 30px #00ff8820;
-}
-
-.glow-yellow {
-  box-shadow: 0 0 15px #ffd70040, 0 0 30px #ffd70020;
-}
-
-.text-glow-orange {
-  text-shadow: 0 0 20px #ff6b0060, 0 0 40px #ff6b0030;
-}
-
-.text-glow-green {
-  text-shadow: 0 0 20px #00ff8860, 0 0 40px #00ff8830;
-}
-
-.gradient-text-orange {
-  background: linear-gradient(135deg, #ff6b00, #ff8c00);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.gradient-text-green {
-  background: linear-gradient(135deg, #00ff88, #33ff99);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.gradient-text-yellow {
-  background: linear-gradient(135deg, #ffd700, #ffe566);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.accent-border {
+  border-color: var(--color-accent);
 }
 
 .glass {
-  background: rgba(5, 5, 5, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-.panel-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--color-text-dim);
-}
-
-.panel-header::before {
-  content: "[";
-}
-
-.panel-header::after {
-  content: "]";
-}
-
-.panel-header span {
-  color: var(--color-text-muted);
-}
-
-.signal-bar {
-  width: 3px;
-  border-radius: 2px;
-  background: var(--color-orange-500);
-  animation: wave var(--delay, 1s) ease-in-out infinite;
-}
-
-.bracket-box {
-  position: relative;
-}
-
-.bracket-box::before,
-.bracket-box::after {
-  position: absolute;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--color-text-dim);
-}
-
-.status-dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  animation: pulse-dot 2s ease-in-out infinite;
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
