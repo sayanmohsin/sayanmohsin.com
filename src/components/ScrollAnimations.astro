@@ -1,0 +1,39 @@
+<script>
+  import { animate, scroll, inView } from "motion"
+
+  inView(
+    "#projects section, #skills section, #contact section",
+    ({ target }) => {
+      animate(
+        target,
+        { opacity: [0, 1], transform: ["translateY(30px)", "translateY(0)"] },
+        { duration: 0.6, easing: "ease-out" }
+      )
+    },
+    { amount: 0.2 }
+  )
+
+  inView(
+    ".grid > div, .grid > a",
+    ({ target }) => {
+      animate(
+        target,
+        { opacity: [0, 1], transform: ["scale(0.95)", "scale(1)"] },
+        { duration: 0.4, easing: "ease-out" }
+      )
+    },
+    { amount: 0.15 }
+  )
+
+  inView(
+    ".animate-marquee",
+    ({ target }) => {
+      animate(
+        target,
+        { opacity: [0, 1] },
+        { duration: 0.8, easing: "ease-out" }
+      )
+    },
+    { amount: 0.3 }
+  )
+</script>

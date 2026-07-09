@@ -1,0 +1,31 @@
+---
+import { projects } from "../data/projects"
+import ProjectCard from "./ProjectCard.astro"
+---
+
+<section id="projects" class="relative px-4 py-24 sm:px-6 sm:py-32">
+  <div class="mx-auto max-w-5xl">
+    <div class="mb-12 text-center">
+      <span class="mb-2 inline-block font-mono text-xs text-text-muted">
+        <span class="gradient-text">$</span> ls ./projects/
+      </span>
+      <h2 class="font-display text-3xl font-bold tracking-tight sm:text-4xl">
+        <span class="gradient-text">Projects</span>
+      </h2>
+      <p class="mt-2 text-sm text-text-muted sm:text-base">
+        Things I've built — from Rust engines to mobile apps
+      </p>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      {projects.filter(p => p.featured).map((p, i) => (
+        <div class="sm:col-span-2 sm:mx-auto sm:w-full sm:max-w-2xl">
+          <ProjectCard project={p} index={i} />
+        </div>
+      ))}
+      {projects.filter(p => !p.featured).map((p, i) => (
+        <ProjectCard project={p} index={i + projects.filter(pf => pf.featured).length} />
+      ))}
+    </div>
+  </div>
+</section>

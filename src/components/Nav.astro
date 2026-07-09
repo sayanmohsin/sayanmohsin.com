@@ -1,0 +1,88 @@
+---
+const links = [
+  { href: "#hero", label: "Home" },
+  { href: "#projects", label: "Projects" },
+  { href: "#skills", label: "Skills" },
+  { href: "#contact", label: "Contact" },
+]
+---
+
+<nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
+  <div class="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
+    <a href="#hero" class="font-display text-lg font-bold tracking-tight gradient-text">
+      $ whoami
+    </a>
+    <div class="hidden items-center gap-1 sm:flex">
+      {
+        links.map((link) => (
+          <a
+            href={link.href}
+            class="rounded-lg px-3 py-2 text-sm font-medium text-text-muted transition-all duration-200 hover:bg-bg-hover hover:text-text-primary"
+          >
+            {link.label}
+          </a>
+        ))
+      }
+      <a
+        href="mailto:sayanmohsin@outlook.com"
+        class="ml-2 rounded-lg bg-accent-500 px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:bg-accent-600 hover:shadow-[0_0_20px_#ff6b0060]"
+      >
+        Email
+      </a>
+    </div>
+    <button
+      id="menu-btn"
+      class="flex h-10 w-10 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary sm:hidden"
+      aria-label="Toggle menu"
+    >
+      <svg id="menu-icon-open" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+      </svg>
+      <svg id="menu-icon-close" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden">
+        <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
+    </button>
+  </div>
+  <div
+    id="mobile-menu"
+    class="hidden border-t border-border/50 bg-bg-primary px-4 pb-4 pt-2 sm:hidden"
+  >
+    {
+      links.map((link) => (
+        <a
+          href={link.href}
+          class="block rounded-lg px-3 py-3 text-base font-medium text-text-muted transition-colors hover:bg-bg-hover hover:text-text-primary"
+        >
+          {link.label}
+        </a>
+      ))
+    }
+    <a
+      href="mailto:sayanmohsin@outlook.com"
+      class="mt-2 block rounded-lg bg-accent-500 px-4 py-3 text-center text-base font-semibold text-white transition-colors hover:bg-accent-600"
+    >
+      Email
+    </a>
+  </div>
+</nav>
+
+<script>
+  const menuBtn = document.getElementById("menu-btn")
+  const mobileMenu = document.getElementById("mobile-menu")
+  const iconOpen = document.getElementById("menu-icon-open")
+  const iconClose = document.getElementById("menu-icon-close")
+
+  menuBtn?.addEventListener("click", () => {
+    mobileMenu?.classList.toggle("hidden")
+    iconOpen?.classList.toggle("hidden")
+    iconClose?.classList.toggle("hidden")
+  })
+
+  document.querySelectorAll("#mobile-menu a").forEach((link) => {
+    link.addEventListener("click", () => {
+      mobileMenu?.classList.add("hidden")
+      iconOpen?.classList.remove("hidden")
+      iconClose?.classList.add("hidden")
+    })
+  })
+</script>
