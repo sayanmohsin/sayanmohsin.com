@@ -2,14 +2,14 @@
   import { animate, inView } from "motion"
 
   inView(
-    "#projects, #skills, #contact",
+    ".section",
     ({ target }) => {
       animate(
         target,
-        { opacity: [0, 1], transform: ["translateY(20px)", "translateY(0)"] },
-        { duration: 0.6, easing: "ease-out" }
+        { opacity: [0, 1], transform: ["translateY(12px)", "translateY(0)"] },
+        { duration: 0.5, easing: "ease-out" }
       )
     },
-    { amount: 0.2 }
+    { amount: 0.3 }
   )
 </script>

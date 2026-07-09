@@ -1,48 +1,27 @@
 ---
-const skillGroups = [
-  {
-    label: "Languages",
-    items: ["TypeScript", "Java", "Python", "Go", "PHP"],
-  },
-  {
-    label: "Frontend",
-    items: ["React", "Next.js", "Angular", "Vue", "Vite"],
-  },
-  {
-    label: "Backend",
-    items: ["Spring", "NestJS", "FastAPI", "Kafka", "Temporal"],
-  },
-  {
-    label: "Runtime & DevOps",
-    items: ["Node.js", "Bun", "Kubernetes", "Docker", "ArgoCD"],
-  },
-]
----
 
-<section id="skills" class="border-t border-border px-4 py-24 sm:px-6 sm:py-32">
-  <div class="mx-auto max-w-5xl">
-    <div class="mb-14 text-center">
-      <div class="mb-3 font-mono text-xs text-text-dim">/skills</div>
-      <h2 class="text-2xl font-light tracking-tight text-text-primary sm:text-3xl">
-        Skills
-      </h2>
+<section id="skills" class="section mx-auto mt-20 max-w-2xl">
+  <div class="text-dim space-y-1">
+    <div>
+      <span class="prompt">$</span> cat <span class="text-dim">~/.skills</span>
     </div>
-
-    <div class="grid gap-3 sm:grid-cols-2">
-      {skillGroups.map((group) => (
-        <div class="rounded-xl border border-border bg-bg-card p-5">
-          <h3 class="mb-4 text-xs font-medium uppercase tracking-wider text-text-muted">
-            {group.label}
-          </h3>
-          <div class="flex flex-wrap gap-2">
-            {group.items.map((skill) => (
-              <span class="rounded-md border border-border bg-bg-hover px-3 py-1.5 text-sm text-text-muted transition-colors hover:border-text-subtle hover:text-text-primary">
-                {skill}
-              </span>
-            ))}
-          </div>
-        </div>
-      ))}
+    <div class="ml-4 mt-3 space-y-2">
+      <div>
+        <span class="text-dim/60 text-[13px]">Languages</span>
+        <span class="ml-2 text-fg">TypeScript · Java · Python · Go · PHP</span>
+      </div>
+      <div>
+        <span class="text-dim/60 text-[13px]">Frontend</span>
+        <span class="ml-2 text-fg">React · Next.js · Angular · Vue · Vite</span>
+      </div>
+      <div>
+        <span class="text-dim/60 text-[13px]">Backend</span>
+        <span class="ml-2 text-fg">Spring · NestJS · FastAPI · Kafka · Temporal</span>
+      </div>
+      <div>
+        <span class="text-dim/60 text-[13px]">Runtime</span>
+        <span class="ml-2 text-fg">Node.js · Bun · Kubernetes · Docker · ArgoCD</span>
+      </div>
     </div>
   </div>
 </section>
