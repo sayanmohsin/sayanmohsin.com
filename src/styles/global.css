@@ -96,18 +96,17 @@ a:hover {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
+  padding: 0.5rem 0;
   font-size: 1.125rem;
   font-weight: 600;
   color: var(--color-signal);
-  background: rgba(13, 13, 11, 0.6);
-  backdrop-filter: blur(8px);
+  background: none;
   border: none;
-  border-radius: 9999px;
+  border-radius: 0;
   cursor: pointer;
   letter-spacing: 0em;
   text-shadow: 0 0 10px rgba(255, 107, 0, 0.5);
-  transition: letter-spacing 0.3s ease, text-shadow 0.3s ease, background 0.3s ease;
+  transition: letter-spacing 0.3s ease, text-shadow 0.3s ease;
 }
 
 .btn-link::after {
@@ -128,7 +127,6 @@ a:hover {
 .btn-link:hover {
   letter-spacing: 0.04em;
   text-shadow: 0 0 18px rgba(255, 107, 0, 0.7);
-  background: rgba(13, 13, 11, 0.8);
 }
 
 .btn-link:hover::after {
