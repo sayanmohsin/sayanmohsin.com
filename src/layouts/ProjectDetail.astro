@@ -43,5 +43,5 @@ const accent = accentMap[project.slug] || "#ff6b00"
     <ProjectLinks links={project.links} accent={accent} />
   )}
 
-  {project.slug === "clipstash" && <DownloadSection />}
+  {project.slug === "clipstash" && <DownloadSection accent={accent} />}
 </section>

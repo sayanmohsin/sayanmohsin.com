@@ -39,15 +39,47 @@ function label(type: string, url: string): string {
 
 {
   links.length > 0 && (
-    <div class="mt-8 space-y-1 mono text-sm">
-      {links.map((link) => (
-        <div class="flex items-center gap-2">
-          <fragment set:html={icon(link.type)} />
-          <a href={link.url} target="_blank" rel="noopener noreferrer" class="text-dim hover:text-fg transition-colors" style={`color: ${accent}`}>
-            {label(link.type, link.url)}
+    <div class={links[0].type === "download" ? "mt-3 space-y-2" : "mt-8 space-y-1 mono text-sm"}>
+      {links.map((link) =>
+        link.type === "download" ? (
+          <a
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="dl-pill"
+            style={`--dl-accent: ${accent}`}
+          >
+            <fragment set:html={icon("download")} />
+            <span>{link.label ?? label(link.type, link.url)}</span>
           </a>
-        </div>
-      ))}
+        ) : (
+          <div class="flex items-center gap-2 mono text-sm">
+            <fragment set:html={icon(link.type)} />
+            <a href={link.url} target="_blank" rel="noopener noreferrer" class="text-dim hover:text-fg transition-colors" style={`color: ${accent}`}>
+              {label(link.type, link.url)}
+            </a>
+          </div>
+        )
+      )}
     </div>
   )
 }
+
+<style>
+  .dl-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 1.125rem;
+    border: 1px solid var(--color-line);
+    border-radius: 9999px;
+    font-family: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
+    font-size: 13px;
+    color: var(--color-dim);
+    transition: all 0.2s;
+  }
+  .dl-pill:hover {
+    border-color: var(--dl-accent);
+    color: var(--dl-accent);
+  }
+</style>

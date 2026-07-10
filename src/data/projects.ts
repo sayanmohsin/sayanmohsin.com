@@ -3,6 +3,7 @@ export type LinkType = "github" | "website" | "appstore" | "playstore" | "downlo
 export interface ProjectLink {
   type: LinkType
   url: string
+  label?: string
 }
 
 export interface Project {
