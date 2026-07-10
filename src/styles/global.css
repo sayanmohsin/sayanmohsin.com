@@ -71,33 +71,16 @@ a:hover {
   font-size: 15px;
   font-weight: 600;
   letter-spacing: 0.02em;
-  color: #ffffff;
-  background: var(--color-signal);
+  color: #0d0d0b;
+  background: #ffd700;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 0 20px rgba(255, 107, 0, 0.4);
-}
-
-.btn-filled::after {
-  content: "";
-  position: absolute;
-  left: 1rem;
-  right: 1rem;
-  bottom: 0.4rem;
-  height: 1.5px;
-  background: rgba(255, 255, 255, 0.6);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.4s ease;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
 }
 
 .btn-filled:hover {
-  background: #e65c00;
-  box-shadow: 0 0 30px rgba(255, 107, 0, 0.6);
-}
-
-.btn-filled:hover::after {
-  transform: scaleX(1);
+  background: #ffed4a;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
 }
 
 .icon-yellow {
