@@ -1,0 +1,110 @@
+<script>
+import * as THREE from "three"
+
+const canvas = document.getElementById("three-canvas") as HTMLCanvasElement
+if (!canvas) throw new Error("Canvas not found")
+
+const isMobile = window.innerWidth < 640
+
+const scene = new THREE.Scene()
+const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 100)
+
+const renderer = new THREE.WebGLRenderer({
+  canvas,
+  alpha: true,
+  antialias: !isMobile,
+})
+renderer.setSize(canvas.clientWidth, canvas.clientHeight)
+renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2))
+
+const geometry = new THREE.TorusKnotGeometry(isMobile ? 0.6 : 0.8, isMobile ? 0.22 : 0.3, isMobile ? 64 : 128, isMobile ? 8 : 16)
+
+const material = new THREE.ShaderMaterial({
+  uniforms: {
+    uTime: { value: 0 },
+    uColor: { value: new THREE.Color("#ff6b00") },
+  },
+  vertexShader: `
+    varying vec3 vNormal;
+    varying vec3 vPosition;
+    varying vec3 vViewDir;
+    uniform float uTime;
+    void main() {
+      vNormal = normalize(normalMatrix * normal);
+      vec4 worldPos = modelMatrix * vec4(position, 1.0);
+      vPosition = worldPos.xyz;
+      vViewDir = normalize(cameraPosition - worldPos.xyz);
+      vec3 pos = position;
+      float pulse = sin(uTime * 0.5 + position.x * 2.0) * 0.04;
+      pos += normal * pulse;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+    }
+  `,
+  fragmentShader: `
+    varying vec3 vNormal;
+    varying vec3 vViewDir;
+    uniform vec3 uColor;
+    void main() {
+      float fresnel = 1.0 - abs(dot(vNormal, vViewDir));
+      fresnel = pow(fresnel, 2.0);
+      float rim = smoothstep(0.0, 0.8, fresnel);
+      vec3 inner = uColor * 0.15;
+      vec3 edge = uColor * (0.6 + fresnel * 1.2);
+      vec3 color = mix(inner, edge, rim);
+      float glow = fresnel * 0.8;
+      gl_FragColor = vec4(color, 0.5 + glow * 0.5);
+    }
+  `,
+  transparent: true,
+  side: THREE.DoubleSide,
+  depthWrite: false,
+})
+
+const mesh = new THREE.Mesh(geometry, material)
+scene.add(mesh)
+
+camera.position.z = isMobile ? 2.5 : 2.8
+
+const mouse = { x: 0, y: 0 }
+if (!isMobile) {
+  document.addEventListener("mousemove", (e) => {
+    mouse.x = (e.clientX / window.innerWidth - 0.5) * 2
+    mouse.y = (e.clientY / window.innerHeight - 0.5) * 2
+  })
+}
+
+let clock = new THREE.Clock()
+
+function animate() {
+  requestAnimationFrame(animate)
+  const t = clock.getElapsedTime()
+
+  material.uniforms.uTime.value = t
+
+  if (!isMobile) {
+    mesh.rotation.x += (mouse.y * 0.3 - mesh.rotation.x) * 0.03
+    mesh.rotation.y += (mouse.x * 0.5 - mesh.rotation.y) * 0.03
+  }
+  mesh.rotation.z = t * 0.08
+
+  renderer.render(scene, camera)
+}
+
+animate()
+
+function resize() {
+  const w = canvas.clientWidth
+  const h = canvas.clientHeight
+  renderer.setSize(w, h)
+  camera.aspect = w / h
+  camera.updateProjectionMatrix()
+}
+
+window.addEventListener("resize", resize)
+</script>
+
+<canvas
+  id="three-canvas"
+  class="pointer-events-none fixed inset-0 z-0 h-screen w-screen"
+  style="will-change: transform"
+/>

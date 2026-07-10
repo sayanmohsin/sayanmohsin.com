@@ -6,39 +6,40 @@ export interface Props {
 const { project } = Astro.props
 ---
 
-<section class="mx-auto max-w-xl px-4 pt-24 pb-24 sm:pt-32 sm:px-0">
-  <a href="/" class="mono text-sm text-dim hover:text-signal transition-colors">
+<section class="mx-auto max-w-2xl px-4 pt-24 pb-24 sm:pt-32 sm:px-0">
+  <a href="/" class="mono text-sm text-dim hover:text-fg transition-colors">
     &larr; back
   </a>
 
-  <div class="mt-8">
-    <h1 class="text-2xl font-light tracking-tight">{project.name}</h1>
+  <div class="mt-10">
+    <p class="mono text-xs text-dim/40 tracking-[0.1em] uppercase">Project</p>
+    <h1 class="mt-2 text-2xl font-light tracking-tight sm:text-3xl">{project.name}</h1>
     <p class="mt-1 text-signal">{project.tagline}</p>
   </div>
 
-  <div class="mt-4 flex flex-wrap gap-x-3 gap-y-1 mono text-[13px] text-dim/50">
+  <div class="mt-4 flex flex-wrap gap-x-3 mono text-[13px] text-dim/40">
     {project.tags.map((tag) => (
       <span>{tag}</span>
     ))}
   </div>
 
-  <div class="mt-6 border-l border-line pl-4 text-dim leading-relaxed">
-    {project.fullDescription}
+  <div class="mt-8 border-l border-line pl-5 text-dim leading-relaxed">
+    <p>{project.fullDescription}</p>
   </div>
 
-  <div class="mt-6 space-y-1 mono text-sm">
+  <div class="mt-8 space-y-1 mono text-sm">
     {project.githubUrl && (
       <div>
-        <span class="text-dim/50">source</span>{' '}
-        <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+        <span class="text-dim/40">source</span>{' '}
+        <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" class="text-fg hover:text-signal transition-colors">
           {project.githubUrl.replace("https://", "")}
         </a>
       </div>
     )}
     {project.websiteUrl && (
       <div>
-        <span class="text-dim/50">site</span>{' '}
-        <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer">
+        <span class="text-dim/40">site</span>{' '}
+        <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer" class="text-fg hover:text-signal transition-colors">
           {project.websiteUrl}
         </a>
       </div>
@@ -47,10 +48,10 @@ const { project } = Astro.props
 
   {project.downloads && project.downloads.length > 0 && (
     <div class="mt-6 space-y-1 mono text-sm">
-      <div class="text-dim/50">downloads</div>
+      <div class="text-dim/40 mb-1">downloads</div>
       {project.downloads.map((dl) => (
         <div>
-          <a href={dl.url}>
+          <a href={dl.url} class="text-fg hover:text-signal transition-colors">
             <span class="text-dim/50">[{dl.os}]</span> {dl.label}
           </a>
         </div>

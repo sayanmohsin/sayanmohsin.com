@@ -1,20 +1,27 @@
 ---
+import ThreeCanvas from "./ThreeCanvas.astro"
+---
 
-<section class="section mx-auto max-w-xl px-4 pt-24 sm:pt-32 sm:px-0">
+<ThreeCanvas />
+
+<section class="relative z-10 flex min-h-screen flex-col items-center justify-center px-4">
   <div class="text-center">
-    <h1 class="text-3xl font-light tracking-tight sm:text-4xl">
+    <p class="mono text-sm text-dim/60 tracking-[0.1em] uppercase">Senior Software Engineer</p>
+    <h1 class="mt-4 text-4xl font-light tracking-tight sm:text-5xl lg:text-6xl">
       Sayan Mohsin
     </h1>
-    <p class="mt-2 text-dim">
-      Building AI-native systems.
+    <p class="mt-3 text-dim text-base sm:text-lg max-w-md mx-auto">
+      Building AI-native systems — from the data plane to the agent layer.
     </p>
   </div>
 
-  <div class="mt-6 flex justify-center gap-4 mono text-sm text-dim">
-    <a href="https://github.com/sayanmohsin" target="_blank" rel="noopener noreferrer">GitHub</a>
-    <a href="https://linkedin.com/in/sayanmohsin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-    <a href="mailto:sayanmohsin@outlook.com">Email</a>
+  <div class="mt-10 flex items-center gap-5 mono text-sm">
+    <a href="https://github.com/sayanmohsin" target="_blank" rel="noopener noreferrer" class="text-dim hover:text-fg transition-colors">GitHub</a>
+    <a href="https://linkedin.com/in/sayanmohsin" target="_blank" rel="noopener noreferrer" class="text-dim hover:text-fg transition-colors">LinkedIn</a>
+    <a href="mailto:sayanmohsin@outlook.com" class="text-dim hover:text-fg transition-colors">Email</a>
   </div>
 
-  <hr class="signal" />
+  <div class="absolute bottom-10 left-1/2 -translate-x-1/2">
+    <svg class="h-5 w-5 text-dim/30" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+  </div>
 </section>
