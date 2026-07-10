@@ -90,3 +90,36 @@ a:hover {
 .profile-glow {
   animation: pulse-glow 3s ease-in-out infinite;
 }
+
+@keyframes arrow-flow {
+  0% { transform: translateX(0); opacity: 1; }
+  50% { transform: translateX(6px); opacity: 1; }
+  51% { transform: translateX(-4px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes arrow-ghost {
+  0% { transform: translateX(0); opacity: 0; }
+  20% { opacity: 0.5; }
+  50% { transform: translateX(6px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 0; }
+}
+
+.arrow-main {
+  animation: arrow-flow 2s ease-in-out infinite;
+}
+
+.arrow-ghost {
+  animation: arrow-ghost 2s ease-in-out infinite;
+  animation-delay: 0.15s;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.group:hover .arrow-main {
+  animation-duration: 1.2s;
+}
+
+.group:hover .arrow-ghost {
+  animation-duration: 1.2s;
+  animation-delay: 0.1s;
+}
