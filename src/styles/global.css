@@ -1,66 +1,65 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #0a0a0a;
-  --color-fg: #d4d4d4;
-  --color-dim: #555555;
-  --color-accent: #ff6b00;
-  --color-line: #1a1a1a;
+  --color-bg: #0d0d0b;
+  --color-fg: #e8e5df;
+  --color-dim: #6b6660;
+  --color-signal: #ff6b00;
+  --color-line: #1e1c19;
 }
 
 ::selection {
   background: #ff6b0025;
-  color: #d4d4d4;
+  color: #e8e5df;
 }
 
 html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   background: var(--color-bg);
   color: var(--color-fg);
-  font-family: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
-  font-size: 14px;
-  line-height: 1.8;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
 }
 
 a {
-  color: var(--color-dim);
+  color: var(--color-fg);
   text-decoration: none;
-  transition: color 0.15s;
+  transition: color 0.2s;
 }
 
 a:hover {
-  color: var(--color-accent);
+  color: var(--color-signal);
 }
 
-.prompt {
-  color: var(--color-accent);
-  user-select: none;
+.mono {
+  font-family: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
 }
 
-.cursor {
-  display: inline-block;
-  width: 7px;
-  height: 15px;
-  background: var(--color-accent);
-  animation: blink 1s step-end infinite;
-  vertical-align: middle;
-  margin-left: 2px;
+hr.signal {
+  border: none;
+  height: 1.5px;
+  background: var(--color-signal);
+  width: 100%;
+  opacity: 0.35;
+  margin: 3rem 0;
 }
 
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+@keyframes draw-in {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 
-@keyframes fade-in {
-  from { opacity: 0; transform: translateY(8px); }
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .section {
-  animation: fade-in 0.5s ease-out forwards;
+  animation: fade-up 0.6s ease-out forwards;
 }

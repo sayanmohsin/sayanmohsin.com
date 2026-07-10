@@ -1,5 +1,5 @@
 <script>
-  import { animate, inView } from "motion"
+  import { animate, inView, scroll } from "motion"
 
   inView(
     ".section",
@@ -12,4 +12,11 @@
     },
     { amount: 0.3 }
   )
+
+  document.querySelectorAll("hr.signal").forEach((hr) => {
+    scroll(
+      animate(hr, { transform: ["scaleX(0)", "scaleX(1)"] }, { easing: "ease-out", duration: 0.8 }),
+      { target: hr, offset: ["start end", "end center"] }
+    )
+  })
 </script>

@@ -6,23 +6,19 @@ export interface Props {
 const { project } = Astro.props
 ---
 
-<section class="mx-auto max-w-2xl">
-  <div class="mb-10 text-dim space-y-1">
-    <div>
-      <span class="prompt">$</span> cat <span class="text-dim">~/projects/{project.slug}/README.md</span>
-    </div>
+<section class="mx-auto max-w-xl px-4 pt-24 pb-24 sm:pt-32 sm:px-0">
+  <a href="/" class="mono text-sm text-dim hover:text-signal transition-colors">
+    &larr; back
+  </a>
+
+  <div class="mt-8">
+    <h1 class="text-2xl font-light tracking-tight">{project.name}</h1>
+    <p class="mt-1 text-signal">{project.tagline}</p>
   </div>
 
-  <div class="flex items-center gap-2 text-fg">
-    <span class="text-xl">{project.emoji}</span>
-    <h1 class="text-xl font-medium sm:text-2xl">{project.name}</h1>
-  </div>
-
-  <p class="mt-1 text-accent">{project.tagline}</p>
-
-  <div class="mt-4 flex flex-wrap gap-x-2 gap-y-1">
+  <div class="mt-4 flex flex-wrap gap-x-3 gap-y-1 mono text-[13px] text-dim/50">
     {project.tags.map((tag) => (
-      <span class="text-[12px] text-dim/60">#{tag}</span>
+      <span>{tag}</span>
     ))}
   </div>
 
@@ -30,10 +26,10 @@ const { project } = Astro.props
     {project.fullDescription}
   </div>
 
-  <div class="mt-6 space-y-2">
+  <div class="mt-6 space-y-1 mono text-sm">
     {project.githubUrl && (
       <div>
-        <span class="text-dim/60 text-[13px]">github:</span>{' '}
+        <span class="text-dim/50">source</span>{' '}
         <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
           {project.githubUrl.replace("https://", "")}
         </a>
@@ -41,7 +37,7 @@ const { project } = Astro.props
     )}
     {project.websiteUrl && (
       <div>
-        <span class="text-dim/60 text-[13px]">website:</span>{' '}
+        <span class="text-dim/50">site</span>{' '}
         <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer">
           {project.websiteUrl}
         </a>
@@ -50,23 +46,15 @@ const { project } = Astro.props
   </div>
 
   {project.downloads && project.downloads.length > 0 && (
-    <div class="mt-8">
-      <div class="text-dim/60 text-[13px] mb-2">downloads:</div>
-      <div class="space-y-1">
-        {project.downloads.map((dl) => (
-          <div>
-            <a href={dl.url}>
-              <span class="text-dim/60 text-[13px]">[{dl.os}]</span> {dl.label}
-            </a>
-          </div>
-        ))}
-      </div>
+    <div class="mt-6 space-y-1 mono text-sm">
+      <div class="text-dim/50">downloads</div>
+      {project.downloads.map((dl) => (
+        <div>
+          <a href={dl.url}>
+            <span class="text-dim/50">[{dl.os}]</span> {dl.label}
+          </a>
+        </div>
+      ))}
     </div>
   )}
-
-  <div class="mt-12">
-    <a href="/" class="text-dim hover:text-accent transition-colors">
-      ← back
-    </a>
-  </div>
 </section>

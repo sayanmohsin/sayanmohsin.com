@@ -2,34 +2,25 @@
 import { projects } from "../data/projects"
 ---
 
-<section id="projects" class="section mx-auto mt-20 max-w-2xl">
-  <div class="text-dim space-y-1">
-    <div>
-      <span class="prompt">$</span> ls <span class="text-dim">~/projects</span>
-    </div>
-    <div class="ml-4 mt-3 space-y-3">
-      {projects.map((p) => (
-        <div class="group leading-snug">
-          <a
-            href={`/projects/${p.slug}`}
-            class="font-medium text-fg hover:text-accent transition-colors"
-          >
-            {p.name}
-          </a>
-          <span class="text-dim text-[13px]">
-            {p.featured && <span class="text-accent"> ★ </span>}
-            <span class="hidden sm:inline">— {p.tagline}</span>
-          </span>
-          <div class="mt-0.5 flex flex-wrap gap-x-2 gap-y-0.5">
-            {p.tags.map((tag) => (
-              <span class="text-[11px] text-dim/60">#{tag}</span>
-            ))}
-            <a href={`/projects/${p.slug}`} class="text-[11px] text-accent/60 hover:text-accent transition-colors">
-              details →
-            </a>
-          </div>
-        </div>
-      ))}
-    </div>
+<section id="projects" class="section mx-auto max-w-xl px-4 sm:px-0">
+  <div class="space-y-3">
+    {projects.map((p) => (
+      <div class="group leading-snug">
+        <a
+          href={`/projects/${p.slug}`}
+          class="mono text-sm"
+        >
+          <span class="text-dim/40">*</span>{" "}
+          {p.featured ? (
+            <span class="text-fg font-medium">{p.name}</span>
+          ) : (
+            <span class="text-fg">{p.name}</span>
+          )}
+        </a>
+        <span class="text-dim text-[14px]"> {p.tagline}</span>
+      </div>
+    ))}
   </div>
+
+  <hr class="signal" />
 </section>
