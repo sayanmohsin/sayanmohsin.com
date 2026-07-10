@@ -12,7 +12,7 @@ export interface Project {
   fullDescription: string
   emoji: string
   githubUrl?: string
-  websiteUrl?: string
+  websiteUrls?: string[]
   downloads?: Download[]
   featured: boolean
   tags: string[]
@@ -24,11 +24,12 @@ export const projects: Project[] = [
     name: "thingd",
     tagline: "Open-source Rust data engine for AI agents",
     description:
-      "Object-shaped storage, durable queues, event streams, full-text search, graph links, and 29 MCP-native tools — all in one static binary.",
+      "Object-shaped storage, durable queues, event streams, full-text search, graph links, and 31 MCP-native tools — all in one static binary.",
     fullDescription:
-      "thingd is a high-performance, object-first data engine that combines persistent object storage, durable queues, append-only event streams, full-text search (FTS5 with Porter stemming), graph links, and 29 MCP-native tools into a single static binary. No stitching together separate infrastructure. Run it embedded (in-process), as a standalone sidecar, or in a cluster. In-memory or persistent SQLite — same API everywhere. thingd is the engine that powers clipstash, dartcam, and thingd Cloud.",
+      "thingd is an object-first data engine for AI agents and applications. It combines durable queues (leases, retries, dead-letter queues), append-only event streams, SQLite FTS5 full-text search, directed graph links, distributed locks, workflow DAGs, and 31 built-in MCP tools into a single static binary (~15MB). Run it embedded (in-process), as a sidecar, in Docker, or on Kubernetes — same API, same primitives. thingd is the engine that powers ClipStash, DartCam, and thingd Cloud.",
     emoji: "🗄️",
     githubUrl: "https://github.com/sayanmohsin/thingd",
+    websiteUrls: ["https://engine.thingd.cloud", "https://thingd.cloud"],
     featured: true,
     tags: ["Rust", "SQLite", "MCP", "TypeScript", "CLI"],
   },
@@ -39,11 +40,11 @@ export const projects: Project[] = [
     description:
       "Hosted MCP endpoints, API key management, team dashboard, tenant isolation, and backups.",
     fullDescription:
-      "thingd Cloud is the SaaS control-plane around the open-source thingd engine. It provides managed hosted MCP endpoints, API key management, tenant isolation, billing, dashboards, and account management. If you want thingd without the ops overhead, thingd Cloud runs it for you.",
+      "thingd Cloud is the managed SaaS layer around the open-source thingd engine. It provides hosted HTTPS MCP endpoints, multi-tenant project and instance management, scoped API keys with per-instance ACL, write approval workflows, full audit logging, and OpenTelemetry instrumentation — so teams get the power of thingd without self-hosting the infrastructure.",
     emoji: "☁️",
-    websiteUrl: "https://thingd.cloud",
+    websiteUrls: ["https://thingd.cloud"],
     featured: false,
-    tags: ["Fastify", "React", "TypeScript", "SaaS"],
+    tags: ["NestJS", "React", "TypeScript", "SaaS"],
   },
   {
     slug: "clipstash",
@@ -52,10 +53,9 @@ export const projects: Project[] = [
     description:
       "Captures clipboard history locally with full-text search, pinning, and paste-on-select.",
     fullDescription:
-      "clipstash is a privacy-first clipboard manager that captures clipboard history locally and provides full-text search, pinning, and paste-on-select. It has a free local tier and a premium tier ($5/mo) that adds cross-device sync, natural language search, and link sharing. Built with Tauri 2.x + Svelte 5 for the desktop app, and thingd (SQLite) for local storage with thingd Cloud for sync.",
+      "ClipStash is a fast, privacy-first clipboard manager for macOS, Windows, and Linux. It captures clipboard history automatically with full-text search (SQLite FTS5), pinning, keyboard navigation, paste-on-select, system tray integration, image previews, and dark/light theme. Built with Tauri 2 + Svelte 5 for the desktop app, with a Rust backend and thingd (SQLite) for local storage. All processing stays local.",
     emoji: "📋",
     githubUrl: "https://github.com/sayanmohsin/clipstash",
-
     featured: false,
     tags: ["Tauri", "Svelte", "Rust", "TypeScript"],
   },
@@ -66,13 +66,9 @@ export const projects: Project[] = [
     description:
       "Snap a photo of the dartboard for automatic score detection, or tap in manually.",
     fullDescription:
-      "dartcam is a minimal dart scoring app for Android, iOS, and web. Users can either snap a photo of the dartboard (on-device image processing detects where darts landed) or tap in scores manually. Supports match modes (301/501/701/1001), double-out enforcement, bust detection, undo, 2-8 player multiplayer, and match persistence. Built with Flutter and Dart, with a Rust native library via flutter_rust_bridge for storage.",
+      "DartCam is a minimal dart scoring app for iOS, Android, and web. Snap a photo of the board for automatic score detection — all on-device image processing, no internet required. Or tap in scores manually with multiplier validation. Supports 301/501/701/1001 with double-out enforcement, bust detection, undo, and 2-8 player multiplayer with automatic turn rotation. Built with Flutter and Dart, with a Rust native library via flutter_rust_bridge for event-sourced persistence on thingd-core.",
     emoji: "🎯",
     githubUrl: "https://github.com/sayanmohsin/dartcam",
-    downloads: [
-      { os: "ios", label: "iOS", url: "#" },
-      { os: "android", label: "Android", url: "#" },
-    ],
     featured: false,
     tags: ["Flutter", "Dart", "Rust", "Mobile"],
   },
