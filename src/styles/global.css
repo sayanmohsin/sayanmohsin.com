@@ -72,31 +72,11 @@ a:hover {
   transform: translateY(0);
 }
 
-@keyframes ken-burns {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.08); }
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 107, 0, 0.2); }
+  50% { box-shadow: 0 0 0 15px rgba(255, 107, 0, 0); }
 }
 
-.hero-image {
-  animation: ken-burns 10s ease-out forwards;
-  object-position: center 30%;
-}
-
-.hero-tilt {
-  perspective: 1200px;
-}
-
-.hero-tilt-inner {
-  transition: transform 0.15s ease-out;
-  will-change: transform;
-}
-
-.hero-overlay {
-  background: linear-gradient(
-    to top,
-    rgba(13, 13, 11, 0.92) 0%,
-    rgba(13, 13, 11, 0.5) 30%,
-    rgba(13, 13, 11, 0.1) 60%,
-    transparent 100%
-  );
+.profile-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
 }
