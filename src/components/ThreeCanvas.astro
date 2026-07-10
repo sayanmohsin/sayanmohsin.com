@@ -122,22 +122,26 @@ const material = new THREE.ShaderMaterial({
 const grid = new THREE.LineSegments(geometry, material)
 scene.add(grid)
 
-const mouse = { worldX: 0, worldZ: 0 }
-let currentMouse = { x: 0, z: 0 }
-let prevMouse = { x: 0, z: 0 }
 let velocity = 0
-
-function projectMouseToGrid(clientX: number, clientY: number) {
-  const ndcX = (clientX / window.innerWidth) * 2 - 1
-  const ndcY = -(clientY / window.innerHeight) * 2 + 1
-  const mx = ndcX * size * 0.9
-  const my = ndcY * size * 0.9
-  mouse.worldX = Math.max(-size * 0.9, Math.min(size * 0.9, mx))
-  mouse.worldZ = Math.max(-size * 0.9, Math.min(size * 0.9, my))
-}
+let lastX = 0
+let lastZ = 0
 
 function onMove(clientX: number, clientY: number) {
-  projectMouseToGrid(clientX, clientY)
+  const ndcX = (clientX / window.innerWidth) * 2 - 1
+  const ndcY = -(clientY / window.innerHeight) * 2 + 1
+
+  const bound = size * 0.9
+  const wx = Math.max(-bound, Math.min(bound, ndcX * bound))
+  const wz = Math.max(-bound, Math.min(bound, ndcY * bound))
+
+  const dx = wx - lastX
+  const dz = wz - lastZ
+  velocity = Math.min(Math.sqrt(dx * dx + dz * dz) * 4, 4)
+
+  lastX = wx
+  lastZ = wz
+
+  material.uniforms.uMouse.value.set(wx, wz)
 }
 
 if (!isMobile) {
@@ -155,20 +159,9 @@ function animate() {
   requestAnimationFrame(animate)
   const t = clock.getElapsedTime()
 
-  const lerpFactor = 0.06 * (1 + velocity * 2)
-  currentMouse.x += (mouse.worldX - currentMouse.x) * lerpFactor
-  currentMouse.z += (mouse.worldZ - currentMouse.z) * lerpFactor
-
-  const dx = mouse.worldX - prevMouse.x
-  const dz = mouse.worldZ - prevMouse.z
-  const speed = Math.sqrt(dx * dx + dz * dz)
-  velocity += (speed * 3 - velocity) * 0.08
-  prevMouse.x = mouse.worldX
-  prevMouse.z = mouse.worldZ
-
+  velocity *= 0.94
   material.uniforms.uTime.value = t
-  material.uniforms.uMouse.value.set(currentMouse.x, currentMouse.z)
-  material.uniforms.uVelocity.value = Math.min(velocity, 2)
+  material.uniforms.uVelocity.value = velocity
 
   renderer.render(scene, camera)
 }
