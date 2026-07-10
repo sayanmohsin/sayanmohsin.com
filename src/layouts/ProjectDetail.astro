@@ -4,26 +4,36 @@ export interface Props {
   project: Project
 }
 const { project } = Astro.props
+
+const accentMap: Record<string, string> = {
+  thingd: "#ff6b00",
+  clipstash: "#6b80ff",
+  dartcam: "#ff6b6b",
+  "thingd-cloud": "#ff8c00",
+}
+const accent = accentMap[project.slug] || "#ff6b00"
 ---
 
-<section class="mx-auto max-w-2xl px-4 pt-24 pb-24 sm:pt-32 sm:px-0">
-  <a href="/" class="mono text-sm text-dim hover:text-fg transition-colors">
-    &larr; back
-  </a>
+<section class="mx-auto max-w-2xl px-4 py-20 sm:px-0 sm:py-28">
+  <a href="/projects" class="mono text-sm text-dim hover:text-fg transition-colors">&larr; all projects</a>
 
-  <div class="mt-10">
-    <p class="mono text-xs text-dim/40 tracking-[0.1em] uppercase">Project</p>
-    <h1 class="mt-2 text-2xl font-light tracking-tight sm:text-3xl">{project.name}</h1>
-    <p class="mt-1 text-signal">{project.tagline}</p>
+  <div class="mt-12 flex items-center gap-3">
+    <span class="text-3xl">{project.emoji}</span>
+    <div>
+      <p class="mono text-xs text-dim/40 tracking-[0.1em] uppercase">Project</p>
+      <h1 class="text-2xl font-light tracking-tight sm:text-3xl" style={`color: ${accent}`}>{project.name}</h1>
+    </div>
   </div>
 
-  <div class="mt-4 flex flex-wrap gap-x-3 mono text-[13px] text-dim/40">
+  <p class="mt-3 text-dim">{project.tagline}</p>
+
+  <div class="mt-3 flex flex-wrap gap-x-3 mono text-[13px] text-dim/40">
     {project.tags.map((tag) => (
       <span>{tag}</span>
     ))}
   </div>
 
-  <div class="mt-8 border-l border-line pl-5 text-dim leading-relaxed">
+  <div class="mt-8 pl-5 accent-line leading-relaxed text-dim" style={`border-left-color: ${accent}40`}>
     <p>{project.fullDescription}</p>
   </div>
 
@@ -31,7 +41,7 @@ const { project } = Astro.props
     {project.githubUrl && (
       <div>
         <span class="text-dim/40">source</span>{' '}
-        <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" class="text-fg hover:text-signal transition-colors">
+        <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" class="hover:text-fg transition-colors" style={`color: ${accent}`}>
           {project.githubUrl.replace("https://", "")}
         </a>
       </div>
@@ -39,7 +49,7 @@ const { project } = Astro.props
     {project.websiteUrl && (
       <div>
         <span class="text-dim/40">site</span>{' '}
-        <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer" class="text-fg hover:text-signal transition-colors">
+        <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer" class="hover:text-fg transition-colors" style={`color: ${accent}`}>
           {project.websiteUrl}
         </a>
       </div>
@@ -47,15 +57,17 @@ const { project } = Astro.props
   </div>
 
   {project.downloads && project.downloads.length > 0 && (
-    <div class="mt-6 space-y-1 mono text-sm">
-      <div class="text-dim/40 mb-1">downloads</div>
-      {project.downloads.map((dl) => (
-        <div>
-          <a href={dl.url} class="text-fg hover:text-signal transition-colors">
-            <span class="text-dim/50">[{dl.os}]</span> {dl.label}
-          </a>
-        </div>
-      ))}
+    <div class="mt-8">
+      <p class="mono text-xs text-dim/40 tracking-[0.1em] uppercase">Downloads</p>
+      <div class="mt-3 space-y-1 mono text-sm">
+        {project.downloads.map((dl) => (
+          <div>
+            <a href={dl.url} class="text-dim hover:text-fg transition-colors">
+              <span class="text-dim/50">[{dl.os}]</span> {dl.label}
+            </a>
+          </div>
+        ))}
+      </div>
     </div>
   )}
 </section>

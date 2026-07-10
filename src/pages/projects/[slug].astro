@@ -18,15 +18,7 @@ const { project } = Astro.props
 ---
 
 <Base title={`${project.name} — Sayan Mohsin`} description={project.tagline}>
-  <div class="min-h-screen bg-bg-primary">
+  <div class="min-h-screen">
     <ProjectDetailLayout project={project} />
-    <footer class="border-t border-border px-4 py-6 text-center">
-      <div class="font-mono text-xs text-text-dim">
-        <span class="gradient-text-orange">$</span> echo "© {new Date().getFullYear()} Sayan Mohsin"
-      </div>
-      <a href="/" class="mt-1 inline-block font-mono text-[11px] text-text-muted hover:text-orange-500 transition-colors">
-        ← Back to dashboard
-      </a>
-    </footer>
   </div>
 </Base>

@@ -5,23 +5,35 @@ import ThreeCanvas from "./ThreeCanvas.astro"
 <ThreeCanvas />
 
 <section class="relative z-10 flex min-h-screen flex-col items-center justify-center px-4">
+  <div class="profile-glow mb-8 h-24 w-24 overflow-hidden rounded-full border border-line sm:h-28 sm:w-28">
+    <div class="flex h-full w-full items-center justify-center bg-bg">
+      <svg class="h-14 w-14 text-dim/30 sm:h-16 sm:w-16" viewBox="0 0 100 100" fill="currentColor">
+        <circle cx="50" cy="34" r="20" />
+        <path d="M18 88 Q50 62 82 88" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+      </svg>
+    </div>
+  </div>
+
   <div class="text-center">
-    <p class="mono text-sm text-dim/60 tracking-[0.1em] uppercase">Senior Software Engineer</p>
-    <h1 class="mt-4 text-4xl font-light tracking-tight sm:text-5xl lg:text-6xl">
+    <p class="mono text-xs text-dim/50 tracking-[0.1em] uppercase">Senior Software Engineer</p>
+    <h1 class="mt-4 text-4xl font-light tracking-tight sm:text-5xl lg:text-6xl text-fg">
       Sayan Mohsin
     </h1>
-    <p class="mt-3 text-dim text-base sm:text-lg max-w-md mx-auto">
+    <p class="mx-auto mt-3 max-w-md text-base text-dim sm:text-lg">
       Building AI-native systems — from the data plane to the agent layer.
     </p>
   </div>
 
-  <div class="mt-10 flex items-center gap-5 mono text-sm">
-    <a href="https://github.com/sayanmohsin" target="_blank" rel="noopener noreferrer" class="text-dim hover:text-fg transition-colors">GitHub</a>
-    <a href="https://linkedin.com/in/sayanmohsin" target="_blank" rel="noopener noreferrer" class="text-dim hover:text-fg transition-colors">LinkedIn</a>
-    <a href="mailto:sayanmohsin@outlook.com" class="text-dim hover:text-fg transition-colors">Email</a>
+  <div class="mt-10 flex items-center gap-3">
+    <a href="/about" class="btn-outline group">
+      about me
+      <svg class="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </a>
   </div>
 
-  <div class="absolute bottom-10 left-1/2 -translate-x-1/2">
-    <svg class="h-5 w-5 text-dim/30" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+  <div class="mt-6 flex items-center gap-5 mono text-sm text-dim/60">
+    <a href="https://github.com/sayanmohsin" target="_blank" rel="noopener noreferrer" class="hover:text-fg transition-colors">GitHub</a>
+    <a href="https://linkedin.com/in/sayanmohsin" target="_blank" rel="noopener noreferrer" class="hover:text-fg transition-colors">LinkedIn</a>
+    <a href="mailto:sayanmohsin@outlook.com" class="hover:text-fg transition-colors">Email</a>
   </div>
 </section>
