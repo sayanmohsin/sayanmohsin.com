@@ -8,7 +8,6 @@ const isMobile = window.innerWidth < 640
 
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 100)
-camera.position.z = 4
 
 const renderer = new THREE.WebGLRenderer({
   canvas,
@@ -18,79 +17,66 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(canvas.clientWidth, canvas.clientHeight)
 renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2))
 
-const ringCount = isMobile ? 2 : 3
-const rings: THREE.Mesh[] = []
-const color = new THREE.Color("#ffd700")
+const geometry = new THREE.TorusKnotGeometry(isMobile ? 0.6 : 0.8, isMobile ? 0.22 : 0.3, isMobile ? 64 : 128, isMobile ? 8 : 16)
 
-for (let i = 0; i < ringCount; i++) {
-  const radius = 1.2 + i * 0.6
-  const geo = new THREE.TorusGeometry(radius, 0.02, 32, 64)
-  const mat = new THREE.ShaderMaterial({
-    uniforms: {
-      uTime: { value: 0 },
-      uOffset: { value: i * 0.5 },
-      uColor: { value: color },
-    },
-    vertexShader: `
-      uniform float uTime;
-      uniform float uOffset;
-      varying float vAlpha;
-      void main() {
-        vec3 pos = position;
-        float wave = sin(uTime * 0.6 + uOffset + pos.x * 0.5) * 0.04;
-        pos.y += wave;
-        vAlpha = 0.3 + 0.7 * (0.5 + 0.5 * sin(uTime * 0.4 + uOffset));
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-      }
-    `,
-    fragmentShader: `
-      uniform vec3 uColor;
-      varying float vAlpha;
-      void main() {
-        float glow = 0.6 + 0.4 * sin(vAlpha * 6.28);
-        gl_FragColor = vec4(uColor, glow * 0.4 * vAlpha);
-      }
-    `,
-    transparent: true,
-    side: THREE.DoubleSide,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
+const material = new THREE.ShaderMaterial({
+  uniforms: {
+    uTime: { value: 0 },
+    uColor1: { value: new THREE.Color("#ff6b00") },
+    uColor2: { value: new THREE.Color("#ffd700") },
+  },
+  vertexShader: `
+    varying vec3 vNormal;
+    varying vec3 vPosition;
+    varying vec3 vViewDir;
+    uniform float uTime;
+    void main() {
+      vNormal = normalize(normalMatrix * normal);
+      vec4 worldPos = modelMatrix * vec4(position, 1.0);
+      vPosition = worldPos.xyz;
+      vViewDir = normalize(cameraPosition - worldPos.xyz);
+      vec3 pos = position;
+      float pulse = sin(uTime * 0.5 + position.x * 2.0) * 0.04;
+      pos += normal * pulse;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+    }
+  `,
+  fragmentShader: `
+    varying vec3 vNormal;
+    varying vec3 vViewDir;
+    uniform vec3 uColor1;
+    uniform vec3 uColor2;
+    uniform float uTime;
+    void main() {
+      float fresnel = 1.0 - abs(dot(vNormal, vViewDir));
+      fresnel = pow(fresnel, 2.0);
+      float mixFactor = 0.5 + 0.5 * sin(uTime * 0.3);
+      vec3 baseColor = mix(uColor1, uColor2, mixFactor);
+      float rim = smoothstep(0.0, 0.8, fresnel);
+      vec3 inner = baseColor * 0.15;
+      vec3 edge = baseColor * (0.6 + fresnel * 1.2);
+      vec3 color = mix(inner, edge, rim);
+      float glow = fresnel * 0.8;
+      gl_FragColor = vec4(color, 0.5 + glow * 0.5);
+    }
+  `,
+  transparent: true,
+  side: THREE.DoubleSide,
+  depthWrite: false,
+})
+
+const mesh = new THREE.Mesh(geometry, material)
+scene.add(mesh)
+
+camera.position.z = isMobile ? 2.5 : 2.8
+
+const mouse = { x: 0, y: 0 }
+if (!isMobile) {
+  document.addEventListener("mousemove", (e) => {
+    mouse.x = (e.clientX / window.innerWidth - 0.5) * 2
+    mouse.y = (e.clientY / window.innerHeight - 0.5) * 2
   })
-  const mesh = new THREE.Mesh(geo, mat)
-  mesh.rotation.x = Math.PI * 0.3
-  scene.add(mesh)
-  rings.push(mesh)
 }
-
-const innerRing = new THREE.Mesh(
-  new THREE.TorusGeometry(0.5, 0.015, 24, 48),
-  new THREE.ShaderMaterial({
-    uniforms: { uTime: { value: 0 }, uColor: { value: color } },
-    vertexShader: `
-      uniform float uTime;
-      varying float vAlpha;
-      void main() {
-        vec3 pos = position;
-        pos.x += sin(uTime * 0.8 + pos.y * 2.0) * 0.03;
-        vAlpha = 0.4 + 0.6 * (0.5 + 0.5 * sin(uTime * 0.6));
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-      }
-    `,
-    fragmentShader: `
-      uniform vec3 uColor;
-      varying float vAlpha;
-      void main() {
-        gl_FragColor = vec4(uColor, vAlpha * 0.5);
-      }
-    `,
-    transparent: true,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
-  })
-)
-innerRing.rotation.x = Math.PI * 0.3
-scene.add(innerRing)
-rings.push(innerRing)
 
 let clock = new THREE.Clock()
 
@@ -98,10 +84,13 @@ function animate() {
   requestAnimationFrame(animate)
   const t = clock.getElapsedTime()
 
-  rings.forEach((ring, i) => {
-    ring.material.uniforms.uTime.value = t
-    ring.rotation.z = t * (0.05 + i * 0.02)
-  })
+  material.uniforms.uTime.value = t
+
+  if (!isMobile) {
+    mesh.rotation.x += (mouse.y * 0.3 - mesh.rotation.x) * 0.03
+    mesh.rotation.y += (mouse.x * 0.5 - mesh.rotation.y) * 0.03
+  }
+  mesh.rotation.z = t * 0.08
 
   renderer.render(scene, camera)
 }
