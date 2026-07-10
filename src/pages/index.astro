@@ -1,7 +1,6 @@
 ---
 import Base from "../layouts/Base.astro"
 import Hero from "../components/Hero.astro"
-import ScrollReveal from "../components/ScrollReveal.astro"
 ---
 
 <Base
@@ -10,8 +9,10 @@ import ScrollReveal from "../components/ScrollReveal.astro"
   canonical="https://sayanmohsin.com"
 >
   <Hero />
-  <footer class="relative z-10 pb-8 text-center">
-    <p class="mono text-xs" style="color:#ffd700; filter:drop-shadow(0 0 6px rgba(255,215,0,0.3))">Toronto, Canada</p>
-  </footer>
-  <ScrollReveal />
 </Base>
+
+<style is:global>
+  body {
+    overflow: hidden;
+  }
+</style>

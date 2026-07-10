@@ -4,7 +4,7 @@ import ThreeCanvas from "./ThreeCanvas.astro"
 
 <ThreeCanvas />
 
-<section class="relative z-10 flex min-h-screen flex-col items-center justify-center px-4">
+<section class="relative z-10 flex h-screen flex-col items-center justify-center overflow-hidden px-4">
   <div class="absolute top-6 right-6 z-20 flex items-center gap-4">
     <a
       href="https://github.com/sayanmohsin"
@@ -51,4 +51,8 @@ import ThreeCanvas from "./ThreeCanvas.astro"
       </div>
     </div>
   </div>
+
+  <footer class="absolute bottom-6 left-0 right-0 text-center">
+    <p class="mono text-xs" style="color:#ffd700; filter:drop-shadow(0 0 6px rgba(255,215,0,0.3))">Toronto, Canada</p>
+  </footer>
 </section>
