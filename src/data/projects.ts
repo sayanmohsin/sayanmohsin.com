@@ -55,12 +55,7 @@ export const projects: Project[] = [
       "clipstash is a privacy-first clipboard manager that captures clipboard history locally and provides full-text search, pinning, and paste-on-select. It has a free local tier and a premium tier ($5/mo) that adds cross-device sync, natural language search, and link sharing. Built with Tauri 2.x + Svelte 5 for the desktop app, and thingd (SQLite) for local storage with thingd Cloud for sync.",
     emoji: "📋",
     githubUrl: "https://github.com/sayanmohsin/clipstash",
-    downloads: [
-      { os: "mac", label: "macOS (Apple Silicon)", url: "#" },
-      { os: "mac", label: "macOS (Intel)", url: "#" },
-      { os: "windows", label: "Windows", url: "#" },
-      { os: "linux", label: "Linux", url: "#" },
-    ],
+
     featured: false,
     tags: ["Tauri", "Svelte", "Rust", "TypeScript"],
   },
