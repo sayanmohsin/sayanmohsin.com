@@ -61,6 +61,45 @@ a:hover {
   color: var(--color-signal);
 }
 
+.btn-filled {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  background: var(--color-signal);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(255, 107, 0, 0.4);
+}
+
+.btn-filled::after {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 0.4rem;
+  height: 1.5px;
+  background: rgba(255, 255, 255, 0.6);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.btn-filled:hover {
+  background: #e65c00;
+  box-shadow: 0 0 30px rgba(255, 107, 0, 0.6);
+}
+
+.btn-filled:hover::after {
+  transform: scaleX(1);
+}
+
 .icon-yellow {
   color: #ffd700;
   filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.35));
@@ -88,49 +127,12 @@ a:hover {
 }
 
 .profile-glow {
+  box-shadow: 0 0 0 0 rgba(255, 107, 0, 0.2);
+  transition: box-shadow 0.5s ease;
+}
+
+.profile-glow:hover {
   animation: pulse-glow 3s ease-in-out infinite;
-}
-
-.btn-link {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0;
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--color-signal);
-  background: none;
-  border: none;
-  border-radius: 0;
-  cursor: pointer;
-  letter-spacing: 0em;
-  text-shadow: 0 0 10px rgba(255, 107, 0, 0.5);
-  transition: letter-spacing 0.3s ease, text-shadow 0.3s ease;
-}
-
-.btn-link::after {
-  content: "";
-  position: absolute;
-  left: 1.25rem;
-  right: 1.25rem;
-  bottom: 0.5rem;
-  width: auto;
-  height: 1.5px;
-  background: var(--color-signal);
-  transform: scaleX(1);
-  transform-origin: left;
-  transition: transform 0.4s ease;
-  box-shadow: 0 0 8px rgba(255, 107, 0, 0.4);
-}
-
-.btn-link:hover {
-  letter-spacing: 0.04em;
-  text-shadow: 0 0 18px rgba(255, 107, 0, 0.7);
-}
-
-.btn-link:hover::after {
-  transform: scaleX(1);
 }
 
 @keyframes arrow-flow {
