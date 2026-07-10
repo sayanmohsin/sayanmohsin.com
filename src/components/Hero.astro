@@ -1,16 +1,24 @@
 ---
+import ThreeCanvas from "./ThreeCanvas.astro"
+---
+
+<ThreeCanvas />
 
 <section class="relative h-screen w-full overflow-hidden">
-  <img
-    src="/sayan-mohsin.jpg"
-    alt="Sayan Mohsin"
-    class="hero-image absolute inset-0 h-full w-full object-cover"
-    id="hero-img"
-  />
+  <div class="hero-tilt absolute inset-0" id="tilt-container">
+    <div class="hero-tilt-inner h-full w-full" id="tilt-inner">
+      <img
+        src="/sayan-mohsin.jpg"
+        alt="Sayan Mohsin"
+        class="hero-image h-full w-full object-cover"
+        id="hero-img"
+      />
+    </div>
+  </div>
 
-  <div class="hero-overlay absolute inset-0" />
+  <div class="hero-overlay absolute inset-0 z-20" />
 
-  <div class="absolute bottom-0 left-0 right-0 p-6 pb-12 sm:p-10 sm:pb-16 lg:p-14 lg:pb-20">
+  <div class="absolute bottom-0 left-0 right-0 z-30 p-6 pb-12 sm:p-10 sm:pb-16 lg:p-14 lg:pb-20">
     <div class="mx-auto max-w-2xl">
       <h1 class="text-3xl font-light tracking-tight text-fg sm:text-4xl lg:text-5xl">
         Sayan Mohsin
@@ -57,5 +65,27 @@
       animate(img, { transform: ["scale(1.08)", "scale(1.15)"] }),
       { target: img.closest("section")!, offset: ["start end", "end start"] }
     )
+  }
+
+  const isMobile = window.innerWidth < 640
+  if (!isMobile) {
+    const container = document.getElementById("tilt-container")
+    if (container) {
+      container.addEventListener("mousemove", (e) => {
+        const rect = container.getBoundingClientRect()
+        const x = (e.clientX - rect.left) / rect.width - 0.5
+        const y = (e.clientY - rect.top) / rect.height - 0.5
+        const inner = document.getElementById("tilt-inner")
+        if (inner) {
+          inner.style.transform = `rotateX(${y * -4}deg) rotateY(${x * 4}deg)`
+        }
+      })
+      container.addEventListener("mouseleave", () => {
+        const inner = document.getElementById("tilt-inner")
+        if (inner) {
+          inner.style.transform = "rotateX(0deg) rotateY(0deg)"
+        }
+      })
+    }
   }
 </script>
