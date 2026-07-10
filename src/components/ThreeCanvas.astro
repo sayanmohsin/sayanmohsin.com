@@ -5,12 +5,9 @@ const canvas = document.getElementById("three-canvas") as HTMLCanvasElement
 if (!canvas) throw new Error("Canvas not found")
 
 const isMobile = window.innerWidth < 640
+const showKnot = Math.random() > 0.5
 
 const scene = new THREE.Scene()
-const camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 100)
-camera.position.set(0, isMobile ? 3.5 : 4, isMobile ? 3.5 : 4)
-camera.lookAt(0, 0, 0)
-
 const renderer = new THREE.WebGLRenderer({
   canvas,
   alpha: true,
@@ -19,164 +16,265 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(canvas.clientWidth, canvas.clientHeight)
 renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2))
 
-const size = isMobile ? 3.5 : 5
-const segments = isMobile ? 20 : 32
-const positions: number[] = []
+const clock = new THREE.Clock()
+let mouseX = 0
+let mouseY = 0
 
-for (let i = 0; i <= segments; i++) {
-  const z = -size + (i / segments) * size * 2
-  for (let j = 0; j < segments; j++) {
-    const x1 = -size + (j / segments) * size * 2
-    const x2 = -size + ((j + 1) / segments) * size * 2
-    positions.push(x1, 0, z, x2, 0, z)
-  }
-}
+if (showKnot) {
+  const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 100)
+  camera.position.z = isMobile ? 2.5 : 2.8
 
-for (let i = 0; i <= segments; i++) {
-  const x = -size + (i / segments) * size * 2
-  for (let j = 0; j < segments; j++) {
-    const z1 = -size + (j / segments) * size * 2
-    const z2 = -size + ((j + 1) / segments) * size * 2
-    positions.push(x, 0, z1, x, 0, z2)
-  }
-}
+  const geometry = new THREE.TorusKnotGeometry(isMobile ? 0.6 : 0.8, isMobile ? 0.22 : 0.3, isMobile ? 64 : 128, isMobile ? 8 : 16)
 
-const geometry = new THREE.BufferGeometry()
-geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3))
-
-const material = new THREE.ShaderMaterial({
-  uniforms: {
-    uTime: { value: 0 },
-    uMouse: { value: new THREE.Vector2(0, 0) },
-    uVelocity: { value: 0 },
-  },
-  vertexShader: `
-    uniform float uTime;
-    uniform vec2 uMouse;
-    uniform float uVelocity;
-
-    varying float vIntensity;
-
-    void main() {
-      vec3 pos = position;
-
-      float dx = pos.x - uMouse.x;
-      float dz = pos.z - uMouse.y;
-      float dist = sqrt(dx * dx + dz * dz);
-
-      float freq = 3.0;
-      float speed = 2.5;
-      float falloff = 0.8;
-      float amp = 0.6;
-
-      float velBoost = 1.0 + uVelocity * 1.5;
-
-      float wave = sin(dist * freq - uTime * speed);
-      float envelope = exp(-dist * falloff);
-      float height = wave * envelope * amp * velBoost;
-
-      float ambient = sin(pos.x * 0.4 + uTime * 0.2) * cos(pos.z * 0.4 + uTime * 0.15) * 0.08;
-
-      pos.y = height + ambient;
-
-      vIntensity = (wave * 0.5 + 0.5) * envelope * clamp(velBoost, 0.5, 3.0);
-      vIntensity = clamp(vIntensity * 1.5, 0.0, 1.0);
-
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-    }
-  `,
-  fragmentShader: `
-    varying float vIntensity;
-
-    void main() {
-      vec3 dark = vec3(0.0, 0.0, 0.0);
-      vec3 orange = vec3(1.0, 0.42, 0.0);
-      vec3 gold = vec3(1.0, 0.85, 0.25);
-
-      float t = vIntensity;
-
-      vec3 color;
-      float alpha;
-      if (t < 0.005) {
-        alpha = t * 4.0;
-        color = orange;
-      } else if (t < 0.35) {
-        color = mix(dark, orange, t * 2.85);
-        alpha = 0.02 + t * 0.6;
-      } else if (t < 0.65) {
-        color = mix(orange, gold, (t - 0.35) * 3.33);
-        alpha = 0.23 + (t - 0.35) * 1.5;
-      } else {
-        color = gold;
-        alpha = 0.68 + (t - 0.65) * 2.0;
+  const material = new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: { value: 0 },
+      uMouse: { value: new THREE.Vector2(0, 0) },
+    },
+    vertexShader: `
+      varying vec3 vNormal;
+      varying vec3 vPosition;
+      varying vec3 vViewDir;
+      uniform float uTime;
+      uniform vec2 uMouse;
+      void main() {
+        vNormal = normalize(normalMatrix * normal);
+        vec4 worldPos = modelMatrix * vec4(position, 1.0);
+        vPosition = worldPos.xyz;
+        vViewDir = normalize(cameraPosition - worldPos.xyz);
+        vec3 pos = position;
+        float wobbleAmt = 0.02 + abs(uMouse.y) * 0.08;
+        float pulse = sin(uTime * 0.5 + position.x * 2.0 + uMouse.y * 3.0) * wobbleAmt;
+        pos += normal * pulse;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
       }
+    `,
+    fragmentShader: `
+      varying vec3 vNormal;
+      varying vec3 vViewDir;
+      uniform vec2 uMouse;
+      void main() {
+        vec3 orange = vec3(1.0, 0.42, 0.0);
+        vec3 green = vec3(0.0, 1.0, 0.53);
+        vec3 yellow = vec3(1.0, 0.84, 0.0);
+        float t = uMouse.x * 0.5 + 0.5;
+        vec3 baseColor;
+        if (t < 0.33) {
+          baseColor = mix(orange, green, t * 3.0);
+        } else if (t < 0.66) {
+          baseColor = mix(green, yellow, (t - 0.33) * 3.0);
+        } else {
+          baseColor = mix(yellow, orange, (t - 0.66) * 3.0);
+        }
+        float fresnel = 1.0 - abs(dot(vNormal, vViewDir));
+        fresnel = pow(fresnel, 2.0);
+        float rim = smoothstep(0.0, 0.8, fresnel);
+        vec3 inner = baseColor * 0.12;
+        vec3 edge = baseColor * (0.5 + fresnel * 1.0);
+        vec3 color = mix(inner, edge, rim);
+        float glow = fresnel * 0.6;
+        gl_FragColor = vec4(color, 0.35 + glow * 0.3);
+      }
+    `,
+    transparent: true,
+    side: THREE.DoubleSide,
+    depthWrite: false,
+  })
 
-      alpha = clamp(alpha, 0.0, 1.0);
-      gl_FragColor = vec4(color, alpha);
+  const mesh = new THREE.Mesh(geometry, material)
+  scene.add(mesh)
+
+  function onKnotMove(clientX: number, clientY: number) {
+    mouseX = Math.max(-1, Math.min(1, (clientX / window.innerWidth - 0.5) * 2))
+    mouseY = Math.max(-1, Math.min(1, (clientY / window.innerHeight - 0.5) * 2))
+    material.uniforms.uMouse.value.set(mouseX, mouseY)
+  }
+
+  if (!isMobile) {
+    document.addEventListener("mousemove", (e) => onKnotMove(e.clientX, e.clientY))
+  } else {
+    document.addEventListener("touchmove", (e) => {
+      const t = e.touches[0]
+      onKnotMove(t.clientX, t.clientY)
+    }, { passive: true })
+  }
+
+  function animate() {
+    requestAnimationFrame(animate)
+    const t = clock.getElapsedTime()
+    material.uniforms.uTime.value = t
+    if (!isMobile) {
+      const s = 3
+      mesh.rotation.x += (mouseY * 0.3 * s - mesh.rotation.x) * 0.03
+      mesh.rotation.y += (mouseX * 0.5 * s - mesh.rotation.y) * 0.03
     }
-  `,
-  transparent: true,
-  depthWrite: false,
-})
+    mesh.rotation.z = t * 0.08
+    renderer.render(scene, camera)
+  }
 
-const grid = new THREE.LineSegments(geometry, material)
-scene.add(grid)
+  animate()
 
-let velocity = 0
-let lastX = 0
-let lastZ = 0
-
-function onMove(clientX: number, clientY: number) {
-  const ndcX = (clientX / window.innerWidth) * 2 - 1
-  const ndcY = -(clientY / window.innerHeight) * 2 + 1
-
-  const bound = size * 0.9
-  const wx = Math.max(-bound, Math.min(bound, ndcX * bound))
-  const wz = Math.max(-bound, Math.min(bound, ndcY * bound))
-
-  const dx = wx - lastX
-  const dz = wz - lastZ
-  velocity = Math.min(Math.sqrt(dx * dx + dz * dz) * 4, 4)
-
-  lastX = wx
-  lastZ = wz
-
-  material.uniforms.uMouse.value.set(wx, wz)
-}
-
-if (!isMobile) {
-  document.addEventListener("mousemove", (e) => onMove(e.clientX, e.clientY))
+  window.addEventListener("resize", () => {
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight)
+    camera.aspect = canvas.clientWidth / canvas.clientHeight
+    camera.updateProjectionMatrix()
+  })
 } else {
-  document.addEventListener("touchmove", (e) => {
-    const t = e.touches[0]
-    onMove(t.clientX, t.clientY)
-  }, { passive: true })
+  const camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 100)
+  camera.position.set(0, isMobile ? 3.5 : 4, isMobile ? 3.5 : 4)
+  camera.lookAt(0, 0, 0)
+
+  const size = isMobile ? 3.5 : 5
+  const segments = isMobile ? 20 : 32
+  const positions: number[] = []
+
+  for (let i = 0; i <= segments; i++) {
+    const z = -size + (i / segments) * size * 2
+    for (let j = 0; j < segments; j++) {
+      const x1 = -size + (j / segments) * size * 2
+      const x2 = -size + ((j + 1) / segments) * size * 2
+      positions.push(x1, 0, z, x2, 0, z)
+    }
+  }
+
+  for (let i = 0; i <= segments; i++) {
+    const x = -size + (i / segments) * size * 2
+    for (let j = 0; j < segments; j++) {
+      const z1 = -size + (j / segments) * size * 2
+      const z2 = -size + ((j + 1) / segments) * size * 2
+      positions.push(x, 0, z1, x, 0, z2)
+    }
+  }
+
+  const geometry = new THREE.BufferGeometry()
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3))
+
+  const material = new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: { value: 0 },
+      uMouse: { value: new THREE.Vector2(0, 0) },
+      uVelocity: { value: 0 },
+    },
+    vertexShader: `
+      uniform float uTime;
+      uniform vec2 uMouse;
+      uniform float uVelocity;
+
+      varying float vIntensity;
+
+      void main() {
+        vec3 pos = position;
+
+        float dx = pos.x - uMouse.x;
+        float dz = pos.z - uMouse.y;
+        float dist = sqrt(dx * dx + dz * dz);
+
+        float freq = 3.0;
+        float speed = 2.5;
+        float falloff = 0.8;
+        float amp = 0.6;
+
+        float velBoost = 1.0 + uVelocity * 1.5;
+
+        float wave = sin(dist * freq - uTime * speed);
+        float envelope = exp(-dist * falloff);
+        float height = wave * envelope * amp * velBoost;
+
+        float ambient = sin(pos.x * 0.4 + uTime * 0.2) * cos(pos.z * 0.4 + uTime * 0.15) * 0.08;
+
+        pos.y = height + ambient;
+
+        vIntensity = (wave * 0.5 + 0.5) * envelope * clamp(velBoost, 0.5, 3.0);
+        vIntensity = clamp(vIntensity * 1.5, 0.0, 1.0);
+
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+      }
+    `,
+    fragmentShader: `
+      varying float vIntensity;
+
+      void main() {
+        vec3 dark = vec3(0.0, 0.0, 0.0);
+        vec3 orange = vec3(1.0, 0.42, 0.0);
+        vec3 gold = vec3(1.0, 0.85, 0.25);
+
+        float t = vIntensity;
+
+        vec3 color;
+        float alpha;
+        if (t < 0.005) {
+          alpha = t * 4.0;
+          color = orange;
+        } else if (t < 0.35) {
+          color = mix(dark, orange, t * 2.85);
+          alpha = 0.02 + t * 0.6;
+        } else if (t < 0.65) {
+          color = mix(orange, gold, (t - 0.35) * 3.33);
+          alpha = 0.23 + (t - 0.35) * 1.5;
+        } else {
+          color = gold;
+          alpha = 0.68 + (t - 0.65) * 2.0;
+        }
+
+        alpha = clamp(alpha, 0.0, 1.0);
+        gl_FragColor = vec4(color, alpha);
+      }
+    `,
+    transparent: true,
+    depthWrite: false,
+  })
+
+  const grid = new THREE.LineSegments(geometry, material)
+  scene.add(grid)
+
+  let velocity = 0
+  let lastX = 0
+  let lastZ = 0
+
+  function onGridMove(clientX: number, clientY: number) {
+    const ndcX = (clientX / window.innerWidth) * 2 - 1
+    const ndcY = -(clientY / window.innerHeight) * 2 + 1
+
+    const bound = size * 0.9
+    const wx = Math.max(-bound, Math.min(bound, ndcX * bound))
+    const wz = Math.max(-bound, Math.min(bound, ndcY * bound))
+
+    const dx = wx - lastX
+    const dz = wz - lastZ
+    velocity = Math.min(Math.sqrt(dx * dx + dz * dz) * 4, 4)
+
+    lastX = wx
+    lastZ = wz
+
+    material.uniforms.uMouse.value.set(wx, wz)
+  }
+
+  if (!isMobile) {
+    document.addEventListener("mousemove", (e) => onGridMove(e.clientX, e.clientY))
+  } else {
+    document.addEventListener("touchmove", (e) => {
+      const t = e.touches[0]
+      onGridMove(t.clientX, t.clientY)
+    }, { passive: true })
+  }
+
+  function animate() {
+    requestAnimationFrame(animate)
+    const t = clock.getElapsedTime()
+    velocity *= 0.94
+    material.uniforms.uTime.value = t
+    material.uniforms.uVelocity.value = velocity
+    renderer.render(scene, camera)
+  }
+
+  animate()
+
+  window.addEventListener("resize", () => {
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight)
+    camera.aspect = canvas.clientWidth / canvas.clientHeight
+    camera.updateProjectionMatrix()
+  })
 }
-
-let clock = new THREE.Clock()
-
-function animate() {
-  requestAnimationFrame(animate)
-  const t = clock.getElapsedTime()
-
-  velocity *= 0.94
-  material.uniforms.uTime.value = t
-  material.uniforms.uVelocity.value = velocity
-
-  renderer.render(scene, camera)
-}
-
-animate()
-
-function resize() {
-  const w = canvas.clientWidth
-  const h = canvas.clientHeight
-  renderer.setSize(w, h)
-  camera.aspect = w / h
-  camera.updateProjectionMatrix()
-}
-
-window.addEventListener("resize", resize)
 </script>
 
 <canvas
