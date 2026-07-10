@@ -61,6 +61,16 @@ a:hover {
   color: var(--color-signal);
 }
 
+.icon-yellow {
+  color: #ffd700;
+  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.35));
+  transition: filter 0.2s;
+}
+
+.icon-yellow:hover {
+  filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.6));
+}
+
 .section {
   opacity: 0;
   transform: translateY(12px);
