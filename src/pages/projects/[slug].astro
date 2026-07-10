@@ -17,7 +17,11 @@ interface Props {
 const { project } = Astro.props
 ---
 
-<Base title={`${project.name} — Sayan Mohsin`} description={project.tagline}>
+<Base
+  title={`${project.name} — Sayan Mohsin`}
+  description={project.tagline}
+  canonical={`https://sayanmohsin.com/projects/${project.slug}`}
+>
   <div class="min-h-screen">
     <ProjectDetailLayout project={project} />
   </div>

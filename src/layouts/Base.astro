@@ -3,8 +3,15 @@ import "../styles/global.css"
 interface Props {
   title: string
   description: string
+  canonical?: string
+  ogImage?: string
 }
-const { title, description } = Astro.props
+const {
+  title,
+  description,
+  canonical = "https://sayanmohsin.com",
+  ogImage = "https://sayanmohsin.com/sayan-mohsin.jpg",
+} = Astro.props
 ---
 
 <!doctype html>
@@ -15,7 +22,34 @@ const { title, description } = Astro.props
     <meta name="description" content={description} />
     <meta name="theme-color" content="#0a0a0a" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonical} />
     <title>{title}</title>
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Sayan Mohsin",
+        "url": "https://sayanmohsin.com",
+        "jobTitle": "Senior Software Engineer",
+        "email": "sayanmohsin@outlook.com",
+        "sameAs": [
+          "https://github.com/sayanmohsin",
+          "https://linkedin.com/in/sayanmohsin"
+        ]
+      }
+    </script>
   </head>
   <body>
     <slot />
