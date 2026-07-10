@@ -1,50 +1,46 @@
-<div id="clipstash-downloads" class="mt-8 hidden">
-  <p class="mono text-xs text-dim/40 tracking-[0.1em] uppercase">Downloads</p>
-  <div id="dl-list" class="mt-3 space-y-1 mono text-sm"></div>
-  <div id="dl-meta" class="mt-2 text-xs text-dim/40 mono"></div>
-</div>
+---
+const MANIFEST_URL = "https://storage.googleapis.com/clipstash-releases/versions.json"
 
-<script is:inline>
-(function () {
-  var MANIFEST_URL = "https://storage.googleapis.com/clipstash-releases/versions.json"
-  var PLATFORMS = [
-    { key: "macos-arm", label: "macOS (Apple Silicon)", short: "mac-arm" },
-    { key: "macos-intel", label: "macOS (Intel)", short: "mac-intel" },
-    { key: "windows", label: "Windows", short: "win" },
-    { key: "linux", label: "Linux", short: "linux" },
-  ]
+interface VersionManifest {
+  latest: string
+  versions: { version: string; date: string; files: Record<string, { url: string }> }[]
+}
 
-  var container = document.getElementById("clipstash-downloads")
-  var list = document.getElementById("dl-list")
-  var meta = document.getElementById("dl-meta")
+const platforms = [
+  { key: "macos-arm", label: "macOS (Apple Silicon)", short: "mac-arm" },
+  { key: "macos-intel", label: "macOS (Intel)", short: "mac-intel" },
+  { key: "windows", label: "Windows", short: "win" },
+  { key: "linux", label: "Linux", short: "linux" },
+]
 
-  if (!container) return
+let manifest: VersionManifest | null = null
+try {
+  const res = await fetch(MANIFEST_URL)
+  if (res.ok) manifest = await res.json()
+} catch {}
 
-  fetch(MANIFEST_URL)
-    .then(function (res) {
-      if (!res.ok) throw new Error("Failed: " + res.status)
-      return res.json()
-    })
-    .then(function (manifest) {
-      var latest = manifest.versions.find(function (v) { return v.version === manifest.latest })
-      if (!latest) return
+const latest = manifest?.versions.find((v) => v.version === manifest?.latest)
+const links = latest
+  ? platforms
+      .filter((p) => latest.files[p.key])
+      .map((p) => ({ url: latest.files[p.key].url, short: p.short, label: p.label }))
+  : []
+---
 
-      var lines = []
-      for (var i = 0; i < PLATFORMS.length; i++) {
-        var p = PLATFORMS[i]
-        var file = latest.files[p.key]
-        if (!file) continue
-        lines.push(
-          '<div><a href="' + file.url + '" class="text-dim hover:text-fg transition-colors"><span class="text-dim/50">[' + p.short + ']</span> ' + p.label + '</a></div>'
-        )
-      }
-
-      if (lines.length === 0) return
-
-      list.innerHTML = lines.join("")
-      meta.textContent = "v" + latest.version + " \u00b7 " + latest.date
-      container.classList.remove("hidden")
-    })
-    .catch(function () {})
-})()
-</script>
+{
+  links.length > 0 && (
+    <div class="mt-8">
+      <p class="mono text-xs text-dim/40 tracking-[0.1em] uppercase">Downloads</p>
+      <div class="mt-3 space-y-1 mono text-sm">
+        {links.map((l) => (
+          <div>
+            <a href={l.url} class="text-dim hover:text-fg transition-colors">
+              <span class="text-dim/50">[{l.short}]</span> {l.label}
+            </a>
+          </div>
+        ))}
+      </div>
+      <p class="mt-2 text-xs text-dim/40 mono">v{latest!.version} · {latest!.date}</p>
+    </div>
+  )
+}
