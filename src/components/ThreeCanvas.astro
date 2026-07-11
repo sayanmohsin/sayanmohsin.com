@@ -5,7 +5,10 @@ const canvas = document.getElementById("three-canvas") as HTMLCanvasElement
 if (!canvas) throw new Error("Canvas not found")
 
 const isMobile = window.innerWidth < 640
-const showKnot = Math.random() > 0.5
+const rand = Math.random()
+const showKnot = rand < 0.33
+const showGrid = rand >= 0.33 && rand < 0.67
+const showImage = rand >= 0.67
 
 const scene = new THREE.Scene()
 const renderer = new THREE.WebGLRenderer({
@@ -116,7 +119,7 @@ if (showKnot) {
     camera.aspect = canvas.clientWidth / canvas.clientHeight
     camera.updateProjectionMatrix()
   })
-} else {
+} else if (showGrid) {
   const camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 100)
   camera.position.set(0, isMobile ? 3.5 : 4, isMobile ? 3.5 : 4)
   camera.lookAt(0, 0, 0)
@@ -261,6 +264,95 @@ if (showKnot) {
     velocity *= 0.94
     material.uniforms.uTime.value = t
     material.uniforms.uVelocity.value = velocity
+    renderer.render(scene, camera)
+  }
+
+  animate()
+
+  window.addEventListener("resize", () => {
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight)
+    camera.aspect = canvas.clientWidth / canvas.clientHeight
+    camera.updateProjectionMatrix()
+  })
+} else if (showImage) {
+  const camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 100)
+  camera.position.z = isMobile ? 1.8 : 2.2
+
+  const loader = new THREE.TextureLoader()
+  const texture = loader.load("/favicon-bg.jpg")
+
+  const geometry = new THREE.PlaneGeometry(isMobile ? 1.6 : 2.0, isMobile ? 1.6 : 2.0)
+
+  const material = new THREE.ShaderMaterial({
+    uniforms: {
+      uTexture: { value: texture },
+      uTime: { value: 0 },
+      uMouse: { value: new THREE.Vector2(0, 0) },
+    },
+    vertexShader: `
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform sampler2D uTexture;
+      uniform float uTime;
+      uniform vec2 uMouse;
+      varying vec2 vUv;
+
+      void main() {
+        vec2 uv = vUv + uMouse * 0.04;
+        vec4 texColor = texture2D(uTexture, uv);
+
+        vec2 center = uv - 0.5;
+        float dist = length(center);
+        float vignette = 1.0 - smoothstep(0.15, 0.75, dist);
+        vignette = mix(0.2, 1.0, vignette);
+
+        float pulse = 0.95 + sin(uTime * 0.4) * 0.05;
+
+        vec3 color = texColor.rgb * vignette * pulse;
+        float alpha = 0.6 + vignette * 0.35;
+
+        gl_FragColor = vec4(color, alpha);
+      }
+    `,
+    transparent: true,
+    depthWrite: false,
+  })
+
+  const mesh = new THREE.Mesh(geometry, material)
+  scene.add(mesh)
+
+  function onImageMove(clientX: number, clientY: number) {
+    mouseX = Math.max(-1, Math.min(1, (clientX / window.innerWidth - 0.5) * 2))
+    mouseY = Math.max(-1, Math.min(1, -(clientY / window.innerHeight - 0.5) * 2))
+    material.uniforms.uMouse.value.set(mouseX, mouseY)
+  }
+
+  if (!isMobile) {
+    document.addEventListener("mousemove", (e) => onImageMove(e.clientX, e.clientY))
+  } else {
+    document.addEventListener("touchmove", (e) => {
+      const t = e.touches[0]
+      onImageMove(t.clientX, t.clientY)
+    }, { passive: true })
+  }
+
+  function animate() {
+    requestAnimationFrame(animate)
+    const t = clock.getElapsedTime()
+    material.uniforms.uTime.value = t
+
+    if (!isMobile) {
+      const s = 2.5
+      mesh.rotation.x += (mouseY * 0.1 * s - mesh.rotation.x) * 0.03
+      mesh.rotation.y += (mouseX * 0.15 * s - mesh.rotation.y) * 0.03
+    }
+    mesh.rotation.z = t * 0.04
+
     renderer.render(scene, camera)
   }
 
