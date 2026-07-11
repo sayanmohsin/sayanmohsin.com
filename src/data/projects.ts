@@ -26,7 +26,7 @@ export const projects: Project[] = [
     description:
       "Object-shaped storage, durable queues, event streams, full-text search, graph links, and 31 MCP-native tools — all in one static binary.",
     fullDescription:
-      "thingd is an object-first data engine for AI agents and applications. It combines durable queues (leases, retries, dead-letter queues), append-only event streams, SQLite FTS5 full-text search, directed graph links, distributed locks, workflow DAGs, and 31 built-in MCP tools into a single static binary (~15MB). Run it embedded (in-process), as a sidecar, in Docker, or on Kubernetes — same API, same primitives. thingd is the engine that powers ClipStash, DartCam, and thingd Cloud.",
+      "thingd is an object-first data engine for AI agents and applications. It combines durable queues (leases, retries, dead-letter queues), append-only event streams, SQLite FTS5 full-text search, directed graph links, distributed locks, workflow DAGs, and 31 built-in MCP tools into a single static binary (~15MB). Run it embedded (in-process), as a sidecar, in Docker, or on Kubernetes — same API, same primitives. thingd is the engine that powers Clipbuf, DartCam, and thingd Cloud.",
     emoji: "🗄️",
     links: [
       { type: "github", url: "https://github.com/sayanmohsin/thingd" },
@@ -52,14 +52,18 @@ export const projects: Project[] = [
     tags: ["NestJS", "React", "TypeScript", "SaaS"],
   },
   {
-    slug: "clipstash",
-    name: "clipstash",
+    slug: "clipbuf",
+    name: "clipbuf",
     tagline: "Privacy-first clipboard manager",
     description:
       "Captures clipboard history locally with full-text search, pinning, and paste-on-select.",
     fullDescription:
-      "ClipStash is a fast, privacy-first clipboard manager for macOS, Windows, and Linux. It captures clipboard history automatically with full-text search (SQLite FTS5), pinning, keyboard navigation, paste-on-select, system tray integration, image previews, and dark/light theme. Built with Tauri 2 + Svelte 5 for the desktop app, with a Rust backend and thingd (SQLite) for local storage. All processing stays local.",
+      "Clipbuf is a fast, privacy-first clipboard manager for macOS, Windows, and Linux. It captures clipboard history automatically with full-text search (SQLite FTS5), pinning, keyboard navigation, paste-on-select, system tray integration, image previews, and dark/light theme. Built with Tauri 2 + Svelte 5 for the desktop app, with a Rust backend and thingd (SQLite) for local storage. All processing stays local.",
     emoji: "📋",
+    links: [
+      { type: "github", url: "https://github.com/sayanmohsin/clipbuf" },
+      { type: "download", url: "https://github.com/sayanmohsin/clipbuf/releases/tag/v0.9.0-beta.7" },
+    ],
     featured: false,
     tags: ["Tauri", "Svelte", "Rust", "TypeScript"],
   },

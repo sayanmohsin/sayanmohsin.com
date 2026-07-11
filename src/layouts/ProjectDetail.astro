@@ -9,7 +9,7 @@ const { project } = Astro.props
 
 const accentMap: Record<string, string> = {
   thingd: "#ff6b00",
-  clipstash: "#6b80ff",
+  clipbuf: "#6b80ff",
   dartcam: "#ff6b6b",
   "thingd-cloud": "#ff8c00",
 }
@@ -43,5 +43,5 @@ const accent = accentMap[project.slug] || "#ff6b00"
     <ProjectLinks links={project.links} accent={accent} />
   )}
 
-  {project.slug === "clipstash" && <DownloadSection accent={accent} />}
+  {project.slug === "clipbuf" && <DownloadSection accent={accent} />}
 </section>
