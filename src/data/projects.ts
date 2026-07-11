@@ -60,10 +60,6 @@ export const projects: Project[] = [
     fullDescription:
       "Clipbuf is a fast, privacy-first clipboard manager for macOS, Windows, and Linux. It captures clipboard history automatically with full-text search (SQLite FTS5), pinning, keyboard navigation, paste-on-select, system tray integration, image previews, and dark/light theme. Built with Tauri 2 + Svelte 5 for the desktop app, with a Rust backend and thingd (SQLite) for local storage. All processing stays local.",
     emoji: "📋",
-    links: [
-      { type: "github", url: "https://github.com/sayanmohsin/clipbuf" },
-      { type: "download", url: "https://github.com/sayanmohsin/clipbuf/releases/tag/v0.9.0-beta.7" },
-    ],
     featured: false,
     tags: ["Tauri", "Svelte", "Rust", "TypeScript"],
   },
