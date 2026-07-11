@@ -306,6 +306,9 @@ if (showKnot) {
         vec2 uv = vUv + uMouse * 0.04;
         vec4 texColor = texture2D(uTexture, uv);
 
+        float lum = dot(texColor.rgb, vec3(0.299, 0.587, 0.114));
+        float texAlpha = smoothstep(0.05, 0.15, lum);
+
         vec2 center = uv - 0.5;
         float dist = length(center);
         float vignette = 1.0 - smoothstep(0.15, 0.75, dist);
@@ -314,7 +317,7 @@ if (showKnot) {
         float pulse = 0.95 + sin(uTime * 0.4) * 0.05;
 
         vec3 color = texColor.rgb * vignette * pulse;
-        float alpha = 0.6 + vignette * 0.35;
+        float alpha = texAlpha * (0.6 + vignette * 0.35);
 
         gl_FragColor = vec4(color, alpha);
       }
