@@ -24,7 +24,7 @@ export const projects: Project[] = [
     name: "thingd",
     tagline: "Open-source Rust data engine for AI agents",
     description:
-      "Object-shaped storage, durable queues, event streams, full-text search, graph links, and 31 MCP-native tools — all in one static binary.",
+      "thingd — open-source Rust data engine with SQLite, durable queues, event streams, full-text search, graph links, and 31 MCP tools. Fast, embeddable, one static binary.",
     fullDescription:
       "thingd is an object-first data engine for AI agents and applications. It combines durable queues (leases, retries, dead-letter queues), append-only event streams, SQLite FTS5 full-text search, directed graph links, distributed locks, workflow DAGs, and 31 built-in MCP tools into a single static binary (~15MB). Run it embedded (in-process), as a sidecar, in Docker, or on Kubernetes — same API, same primitives. thingd is the engine that powers Clipbuf, DartCam, and thingd Cloud.",
     emoji: "🗄️",
@@ -41,7 +41,7 @@ export const projects: Project[] = [
     name: "thingd Cloud",
     tagline: "Managed hosting for thingd",
     description:
-      "Hosted MCP endpoints, API key management, team dashboard, tenant isolation, and backups.",
+      "thingd Cloud — managed SaaS hosting for the thingd Rust data engine. Hosted MCP endpoints, team dashboard, API keys, write approvals, and backups.",
     fullDescription:
       "thingd Cloud is the managed SaaS layer around the open-source thingd engine. It provides hosted HTTPS MCP endpoints, multi-tenant project and instance management, scoped API keys with per-instance ACL, write approval workflows, full audit logging, and OpenTelemetry instrumentation — so teams get the power of thingd without self-hosting the infrastructure.",
     emoji: "☁️",
@@ -56,7 +56,7 @@ export const projects: Project[] = [
     name: "clipbuf",
     tagline: "Privacy-first clipboard manager",
     description:
-      "Captures clipboard history locally with full-text search, pinning, and paste-on-select.",
+      "clipbuf — free and open-source clipboard manager for macOS, Windows, and Linux. Full-text search, pinning, paste-on-select. Built with Tauri and Svelte.",
     fullDescription:
       "Clipbuf is a fast, privacy-first clipboard manager for macOS, Windows, and Linux. It captures clipboard history automatically with full-text search (SQLite FTS5), pinning, keyboard navigation, paste-on-select, system tray integration, image previews, and dark/light theme. Built with Tauri 2 + Svelte 5 for the desktop app, with a Rust backend and thingd (SQLite) for local storage. All processing stays local.",
     emoji: "📋",
@@ -68,7 +68,7 @@ export const projects: Project[] = [
     name: "dartcam",
     tagline: "Minimal dart scoring app",
     description:
-      "Snap a photo of the dartboard for automatic score detection, or tap in manually.",
+      "dartcam — dart score calculator for iOS and Android. Automatic score detection with on-device AI. Supports 301/501/701/1001 multiplayer.",
     fullDescription:
       "DartCam is a minimal dart scoring app for iOS, Android, and web. Snap a photo of the board for automatic score detection — all on-device image processing, no internet required. Or tap in scores manually with multiplier validation. Supports 301/501/701/1001 with double-out enforcement, bust detection, undo, and 2-8 player multiplayer with automatic turn rotation. Built with Flutter and Dart, with a Rust native library via flutter_rust_bridge for event-sourced persistence on thingd-core.",
     emoji: "🎯",

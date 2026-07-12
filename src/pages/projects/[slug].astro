@@ -15,12 +15,56 @@ interface Props {
 }
 
 const { project } = Astro.props
+
+const appSchemas: Record<string, Record<string, unknown>> = {
+  clipbuf: {
+    "@type": "SoftwareApplication",
+    name: "clipbuf",
+    operatingSystem: "macOS, Windows, Linux",
+    applicationCategory: "UtilityApplication",
+    description: "Privacy-first clipboard manager with full-text search, pinning, and paste-on-select for macOS, Windows, and Linux.",
+    author: { "@type": "Person", name: "Sayan Mohsin" },
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  },
+  thingd: {
+    "@type": "SoftwareApplication",
+    name: "thingd",
+    operatingSystem: "macOS, Linux, Docker",
+    applicationCategory: "DeveloperApplication",
+    description: "Open-source Rust data engine with SQLite, durable queues, event streams, full-text search, graph links, and MCP tools.",
+    author: { "@type": "Person", name: "Sayan Mohsin" },
+  },
+  "thingd-cloud": {
+    "@type": "WebApplication",
+    name: "thingd Cloud",
+    applicationCategory: "BusinessApplication",
+    description: "Managed SaaS hosting for thingd with hosted MCP endpoints, team dashboard, and API key management.",
+    author: { "@type": "Person", name: "Sayan Mohsin" },
+  },
+  dartcam: {
+    "@type": "MobileApplication",
+    name: "dartcam",
+    operatingSystem: "Android, iOS",
+    applicationCategory: "GameApplication",
+    description: "Dart score calculator and automatic score detection app for iOS and Android with on-device AI.",
+    author: { "@type": "Person", name: "Sayan Mohsin" },
+  },
+}
+
+const schema = appSchemas[project.slug]
+
+const metaDescription =
+  project.description.length > project.tagline.length
+    ? project.description
+    : project.tagline
 ---
 
 <Base
   title={`${project.name} — Sayan Mohsin`}
-  description={project.tagline}
+  description={metaDescription}
   canonical={`https://sayanmohsin.com/projects/${project.slug}`}
+  ogType="article"
+  schema={schema ? [schema] : undefined}
 >
   <div class="min-h-screen">
     <ProjectDetailLayout project={project} />

@@ -5,13 +5,34 @@ interface Props {
   description: string
   canonical?: string
   ogImage?: string
+  ogType?: "website" | "profile" | "article"
+  schema?: Record<string, unknown>[]
 }
 const {
   title,
   description,
   canonical = "https://sayanmohsin.com",
-  ogImage = "https://sayanmohsin.com/sayan-mohsin.svg",
+  ogImage = "https://sayanmohsin.com/og-image.png",
+  ogType = "website",
+  schema = [],
 } = Astro.props
+
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Sayan Mohsin",
+  url: "https://sayanmohsin.com",
+  jobTitle: "Senior Software Engineer",
+  email: "sayanmohsin@outlook.com",
+  sameAs: [
+    "https://github.com/sayanmohsin",
+    "https://linkedin.com/in/sayanmohsin",
+  ],
+  homeLocation: {
+    "@type": "Place",
+    name: "Toronto, Canada",
+  },
+}
 ---
 
 <!doctype html>
@@ -29,31 +50,21 @@ const {
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:locale" content="en_CA" />
+    <meta property="og:site_name" content="Sayan Mohsin" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:site" content="@sayanmohsin" />
+    <meta name="twitter:creator" content="@sayanmohsin" />
 
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Sayan Mohsin",
-        "url": "https://sayanmohsin.com",
-        "jobTitle": "Senior Software Engineer",
-        "email": "sayanmohsin@outlook.com",
-        "sameAs": [
-          "https://github.com/sayanmohsin",
-          "https://linkedin.com/in/sayanmohsin"
-        ],
-        "homeLocation": {
-          "@type": "Place",
-          "name": "Toronto, Canada"
-        }
-      }
-    </script>
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)}></script>
+    {schema.map((s) => (
+      <script type="application/ld+json" set:html={JSON.stringify(s)}></script>
+    ))}
   </head>
   <body>
     <slot />
