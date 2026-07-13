@@ -39,6 +39,20 @@ const accent = accentMap[project.slug] || "#ff6b00"
     <p>{project.fullDescription}</p>
   </div>
 
+  {project.highlights && project.highlights.length > 0 && (
+    <div class="mt-8">
+      <h2 class="mono text-xs text-dim/50 tracking-[0.1em] uppercase mb-4">Highlights</h2>
+      <ul class="space-y-2">
+        {project.highlights.map((h) => (
+          <li class="flex items-start gap-2 text-sm text-dim">
+            <span class="mt-0.5 shrink-0 text-xs" style={`color: ${accent}`}>▹</span>
+            <span>{h}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+
   {project.links && project.links.length > 0 && (
     <ProjectLinks links={project.links} accent={accent} />
   )}
