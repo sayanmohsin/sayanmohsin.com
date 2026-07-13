@@ -1,14 +1,15 @@
 <script>
 import * as THREE from "three"
+import backgrounds from "../data/hero-backgrounds.json"
 
 const canvas = document.getElementById("three-canvas") as HTMLCanvasElement
 if (!canvas) throw new Error("Canvas not found")
 
 const isMobile = window.innerWidth < 640
-const rand = Math.random()
-const showKnot = rand < 0.33
-const showGrid = rand >= 0.33 && rand < 0.67
-const showImage = rand >= 0.67
+const bg = backgrounds[Math.floor(Math.random() * backgrounds.length)].type
+const showKnot = bg === "torus-knot"
+const showGrid = bg === "neon-grid"
+const showImage = bg === "image"
 
 const scene = new THREE.Scene()
 const renderer = new THREE.WebGLRenderer({

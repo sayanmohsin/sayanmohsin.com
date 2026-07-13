@@ -36,20 +36,19 @@ import ThreeCanvas from "./ThreeCanvas.astro"
       <h1 class="text-5xl font-light tracking-tight text-white sm:text-7xl lg:text-8xl">
         I'm Sayan Mohsin
       </h1>
-    <div class="mx-auto mt-6 max-w-sm text-center font-light leading-relaxed text-[#e8e5df] sm:max-w-lg" style="text-shadow: 0 2px 12px rgba(0,0,0,0.9)">
-      <div>
-        <span class="text-signal font-mono" style="text-shadow: 0 0 8px rgba(255,107,0,0.5)">></span> I write code that writes code.
-      </div>
-      <div>
-        Sometimes it works on the first try.
-      </div>
-      <div>
-        Usually it doesn't.
-      </div>
-      <div>
-        That's what makes it fun.
-      </div>
-    </div>
+    <div id="hero-subtitle" class="mx-auto mt-6 max-w-sm text-center font-light leading-relaxed text-[#e8e5df] sm:max-w-lg" style="text-shadow: 0 2px 12px rgba(0,0,0,0.9)"></div>
+
+<script>
+import texts from "../data/hero-texts.json"
+
+const entry = texts[Math.floor(Math.random() * texts.length)]
+const container = document.getElementById("hero-subtitle")
+if (container) {
+  container.innerHTML = entry.lines
+    .map((line) => `<div><span class="text-signal font-mono" style="text-shadow: 0 0 8px rgba(255,107,0,0.5)">></span> ${line}</div>`)
+    .join("")
+}
+</script>
     <a href="/about" class="group btn-filled mt-8 inline-flex">
       there's more
       <span class="arrow-wrap relative h-3.5 w-5">
