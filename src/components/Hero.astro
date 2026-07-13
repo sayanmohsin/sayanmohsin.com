@@ -45,7 +45,7 @@ const entry = texts[Math.floor(Math.random() * texts.length)]
 const container = document.getElementById("hero-subtitle")
 if (container) {
   container.innerHTML = entry.lines
-    .map((line) => `<div><span class="text-signal font-mono" style="text-shadow: 0 0 8px rgba(255,107,0,0.5)">></span> ${line}</div>`)
+    .map((line, i) => `<div>${i === 0 ? `<span class="text-signal font-mono" style="text-shadow: 0 0 8px rgba(255,107,0,0.5)">></span> ` : ""}${line}</div>`)
     .join("")
 }
 </script>
