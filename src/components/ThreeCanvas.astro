@@ -317,7 +317,7 @@ if (showKnot) {
 
         float pulse = 0.95 + sin(uTime * 0.4) * 0.05;
 
-        vec3 color = texColor.rgb * vignette * pulse;
+        vec3 color = vec3(lum * 0.5) * vignette * pulse;
         float alpha = texAlpha * (0.25 + vignette * 0.15);
 
         gl_FragColor = vec4(color, alpha);
