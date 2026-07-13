@@ -28,7 +28,8 @@ import ThreeCanvas from "./ThreeCanvas.astro"
     </a>
   </div>
 
-  <div class="text-center">
+  <div class="relative text-center">
+    <div class="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-b from-bg/40 via-bg/20 to-transparent"></div>
     <div class="profile-glow mx-auto mb-8 h-40 w-40 overflow-hidden rounded-full transition-shadow duration-500 sm:h-48 sm:w-48">
       <img src="/sayan-mohsin.svg" alt="Sayan Mohsin" class="h-full w-full" />
     </div>
@@ -36,7 +37,7 @@ import ThreeCanvas from "./ThreeCanvas.astro"
       <h1 class="text-5xl font-light tracking-tight text-white sm:text-7xl lg:text-8xl">
         I'm Sayan Mohsin
       </h1>
-    <div id="hero-subtitle" class="mx-auto mt-6 max-w-sm text-center font-light leading-relaxed text-[#e8e5df] sm:max-w-lg" style="text-shadow: 0 2px 12px rgba(0,0,0,0.9)"></div>
+    <div id="hero-subtitle" class="relative mx-auto mt-6 max-w-sm text-center font-light leading-relaxed text-[#e8e5df] sm:max-w-lg" style="text-shadow: 0 4px 20px rgba(0,0,0,0.95)"></div>
 
 <script>
 import texts from "../data/hero-texts.json"
