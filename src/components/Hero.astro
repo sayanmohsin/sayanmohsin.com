@@ -29,7 +29,7 @@ import ThreeCanvas from "./ThreeCanvas.astro"
   </div>
 
   <div class="relative text-center">
-    <div class="profile-glow mx-auto mb-8 h-40 w-40 overflow-hidden rounded-full transition-shadow duration-500 sm:h-48 sm:w-48">
+    <div id="hero-frame" class="profile-glow mx-auto mb-8 h-40 w-40 overflow-hidden rounded-full transition-shadow duration-500 sm:h-48 sm:w-48">
       <img id="hero-profile" src="/sayan-mohsin.svg" alt="Sayan Mohsin" class="h-full w-full" />
     </div>
 
@@ -45,6 +45,9 @@ const entry = texts[Math.floor(Math.random() * texts.length)]
 
 const img = document.getElementById("hero-profile")
 if (img) img.src = "/" + entry.image + ".svg"
+
+const frame = document.getElementById("hero-frame")
+if (frame) frame.style.backgroundColor = entry.bg
 
 const container = document.getElementById("hero-subtitle")
 if (container) {
