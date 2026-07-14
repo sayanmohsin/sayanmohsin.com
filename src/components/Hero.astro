@@ -29,8 +29,9 @@ import ThreeCanvas from "./ThreeCanvas.astro"
   </div>
 
   <div class="relative text-center">
-    <div class="profile-glow mx-auto mb-8 h-40 w-40 overflow-hidden rounded-full transition-shadow duration-500 sm:h-48 sm:w-48">
-      <img id="hero-profile" src="/sayan-mohsin.svg" alt="Sayan Mohsin" class="h-full w-full" />
+    <div class="profile-glow mx-auto mb-8 h-40 w-40 overflow-hidden rounded-full border border-line transition-shadow duration-500 sm:h-48 sm:w-48 relative">
+      <img src="/sayan-mohsin.svg" alt="Sayan Mohsin" class="absolute inset-0 h-full w-full profile-a" />
+      <img src="/sayan-mohsin-yello.svg" alt="Sayan Mohsin" class="absolute inset-0 h-full w-full profile-b" />
     </div>
 
       <h1 class="text-5xl font-light tracking-tight text-white sm:text-7xl lg:text-8xl">
@@ -38,13 +39,39 @@ import ThreeCanvas from "./ThreeCanvas.astro"
       </h1>
     <div id="hero-subtitle" class="relative mx-auto mt-6 max-w-sm text-center font-light leading-relaxed text-[#e8e5df] sm:max-w-lg" style="text-shadow: 0 4px 20px rgba(0,0,0,0.95)"></div>
 
+<style>
+@keyframes a-cycle {
+  0%, 25% { opacity: 1; transform: scale(1) rotate(0deg) }
+  29% { opacity: 1; transform: scale(1.05) rotate(1.5deg); filter: blur(2px); }
+  33% { opacity: 0; transform: scale(1.1) rotate(3deg); filter: blur(4px); }
+  67% { opacity: 0; }
+  71% { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+@keyframes b-cycle {
+  0%, 29% { opacity: 0; }
+  33% { opacity: 1; }
+  67% { opacity: 1; }
+  71% { opacity: 1; transform: scale(1.05) rotate(1.5deg); filter: blur(2px); }
+  75% { opacity: 0; transform: scale(1.1) rotate(3deg); filter: blur(4px); }
+  100% { opacity: 0; }
+}
+
+.profile-a {
+  animation: a-cycle 14s ease-in-out infinite;
+  z-index: 1;
+}
+.profile-b {
+  animation: b-cycle 14s ease-in-out infinite;
+  z-index: 2;
+}
+</style>
+
 <script>
 import texts from "../data/hero-texts.json"
 
 const entry = texts[Math.floor(Math.random() * texts.length)]
-
-const img = document.getElementById("hero-profile")
-if (img) img.src = "/" + entry.image + ".svg"
 
 const container = document.getElementById("hero-subtitle")
 if (container) {
