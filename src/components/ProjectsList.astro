@@ -6,7 +6,7 @@ import { projects } from "../data/projects"
   <a href="/about" class="mono text-sm text-dim hover:text-fg transition-colors">&larr; about</a>
 
   <div class="mt-12">
-    <p class="mono text-xs text-dim/40 tracking-[0.1em] uppercase">Projects</p>
+    <p class="mono text-xs text-dim/60 tracking-[0.1em] uppercase">Projects</p>
     <h1 class="mt-3 text-2xl font-light tracking-tight sm:text-3xl">Things I've built</h1>
   </div>
 
@@ -21,7 +21,7 @@ import { projects } from "../data/projects"
           <h2 class="text-lg font-medium text-fg group-hover:text-signal transition-colors">{p.name}</h2>
         </div>
         <p class="mt-1 text-sm text-dim">{p.tagline}</p>
-        <div class="mt-1 flex flex-wrap gap-x-2 mono text-[12px] text-dim/40">
+        <div class="mt-1 flex flex-wrap gap-x-2 mono text-[12px] text-dim/60">
           {p.tags.map((tag) => (
             <span>{tag}</span>
           ))}

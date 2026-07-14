@@ -22,14 +22,14 @@ const accent = accentMap[project.slug] || "#ff6b00"
   <div class="mt-12 flex items-center gap-3">
     <span class="text-3xl">{project.emoji}</span>
     <div>
-      <p class="mono text-xs text-dim/40 tracking-[0.1em] uppercase">Project</p>
+      <p class="mono text-xs text-dim/60 tracking-[0.1em] uppercase">Project</p>
       <h1 class="text-2xl font-light tracking-tight sm:text-3xl" style={`color: ${accent}`}>{project.name}</h1>
     </div>
   </div>
 
   <p class="mt-3 text-dim">{project.tagline}</p>
 
-  <div class="mt-3 flex flex-wrap gap-x-3 mono text-[13px] text-dim/40">
+  <div class="mt-3 flex flex-wrap gap-x-3 mono text-[13px] text-dim/60">
     {project.tags.map((tag) => (
       <span>{tag}</span>
     ))}
@@ -41,7 +41,7 @@ const accent = accentMap[project.slug] || "#ff6b00"
 
   {project.highlights && project.highlights.length > 0 && (
     <div class="mt-8">
-      <h2 class="mono text-xs text-dim/50 tracking-[0.1em] uppercase mb-4">Highlights</h2>
+      <h2 class="mono text-xs text-dim/70 tracking-[0.1em] uppercase mb-4">Highlights</h2>
       <ul class="space-y-2">
         {project.highlights.map((h) => (
           <li class="flex items-start gap-2 text-sm text-dim">
