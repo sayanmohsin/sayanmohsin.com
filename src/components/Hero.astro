@@ -1,5 +1,8 @@
 ---
 import ThreeCanvas from "./ThreeCanvas.astro"
+import texts from "../data/hero-texts.json"
+
+const entry = texts[Math.floor(Math.random() * texts.length)]
 ---
 
 <ThreeCanvas />
@@ -30,25 +33,17 @@ import ThreeCanvas from "./ThreeCanvas.astro"
 
   <div class="relative text-center">
     <div class="profile-glow mx-auto mb-8 h-40 w-40 overflow-hidden rounded-full transition-shadow duration-500 sm:h-48 sm:w-48">
-      <img src="/sayan-mohsin.svg" alt="Sayan Mohsin" class="h-full w-full" />
+      <img src={"/" + entry.image + ".svg"} alt="Sayan Mohsin" class="h-full w-full" />
     </div>
 
       <h1 class="text-5xl font-light tracking-tight text-white sm:text-7xl lg:text-8xl">
         I'm Sayan Mohsin
       </h1>
-    <div id="hero-subtitle" class="relative mx-auto mt-6 max-w-sm text-center font-light leading-relaxed text-[#e8e5df] sm:max-w-lg" style="text-shadow: 0 4px 20px rgba(0,0,0,0.95)"></div>
-
-<script>
-import texts from "../data/hero-texts.json"
-
-const entry = texts[Math.floor(Math.random() * texts.length)]
-const container = document.getElementById("hero-subtitle")
-if (container) {
-  container.innerHTML = entry.lines
-    .map((line, i) => `<div>${i === 0 ? `<span class="text-signal font-mono" style="text-shadow: 0 0 8px rgba(255,107,0,0.5)">></span> ` : ""}${line}</div>`)
-    .join("")
-}
-</script>
+    <div class="relative mx-auto mt-6 max-w-sm text-center font-light leading-relaxed text-[#e8e5df] sm:max-w-lg" style="text-shadow: 0 4px 20px rgba(0,0,0,0.95)">
+      {entry.lines.map((line, i) => (
+        <div>{i === 0 && <span class="text-signal font-mono" style="text-shadow: 0 0 8px rgba(255,107,0,0.5)">&gt;</span>} {line}</div>
+      ))}
+    </div>
     <a href="/about" class="group btn-filled mt-8 inline-flex">
       there's more
       <span class="arrow-wrap relative h-3.5 w-5">
