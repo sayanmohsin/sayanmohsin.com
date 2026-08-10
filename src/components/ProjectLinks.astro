@@ -56,7 +56,7 @@ function label(type: string, url: string): string {
           <div class="flex items-center gap-2 mono text-sm">
             <fragment set:html={icon(link.type)} />
             <a href={link.url} target="_blank" rel="noopener noreferrer" class="text-dim hover:text-fg transition-colors" style={`color: ${accent}`}>
-              {label(link.type, link.url)}
+              {link.label ?? label(link.type, link.url)}
             </a>
           </div>
         )

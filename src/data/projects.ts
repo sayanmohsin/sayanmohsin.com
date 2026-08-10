@@ -15,6 +15,8 @@ export interface Project {
   emoji: string
   links?: ProjectLink[]
   featured: boolean
+  status?: string
+  relatedSlugs?: string[]
   tags: string[]
   highlights?: string[]
   accent?: string
@@ -29,7 +31,7 @@ export const projects: Project[] = [
     description:
       "thingd — open-source Rust data engine with SQLite, durable queues, event streams, full-text search, graph links, and 31 MCP tools. Fast, embeddable, one static binary.",
     fullDescription:
-      "thingd is an object-first data engine for AI agents and applications. It combines durable queues (leases, retries, dead-letter queues), append-only event streams, SQLite FTS5 full-text search, directed graph links, distributed locks, workflow DAGs, and 31 built-in MCP tools into a single static binary (~15MB). Sub-millisecond local lookups and 10,000+ writes/second per node. Run it embedded (in-process), as a sidecar, in Docker, or on Kubernetes — same API, same primitives. thingd is the engine that powers clipbuf, dartcam, and thingd Cloud.",
+      "thingd is an object-first data engine for AI agents and applications. It combines durable queues (leases, retries, dead-letter queues), append-only event streams, SQLite FTS5 full-text search, directed graph links, distributed locks, workflow DAGs, and 31 built-in MCP tools into a single static binary (~15MB). Sub-millisecond local lookups and 10,000+ writes/second per node. Run it embedded (in-process), as a sidecar, in Docker, or on Kubernetes — same API, same primitives. thingd powers clipboard search in clipbuf, score history in dartcam, catalog and library state in GoodOne Watch, and the managed layer in thingd Cloud.",
     emoji: "🗄️",
     links: [
       { type: "github", url: "https://github.com/sayanmohsin/thingd" },
@@ -43,8 +45,10 @@ export const projects: Project[] = [
       "10,000+ writes/second throughput on a single node",
       "~15MB static binary — embeddable in Rust, Python, TypeScript, or standalone",
       "Drives clipboard search on clipbuf, score history on dartcam, and cloud sync via thingd Cloud",
+      "Provides catalog and library persistence for GoodOne Watch",
     ],
     accent: "#ff6b00",
+    relatedSlugs: ["clipbuf", "dartcam", "goodone-watch"],
     metrics: [{ value: "15MB", label: "static binary" }, { value: "10k+", label: "writes / sec" }],
   },
   {
@@ -68,7 +72,62 @@ export const projects: Project[] = [
       "Multi-tenant isolation, audit logging, and automated backups",
     ],
     accent: "#ff9e43",
+    relatedSlugs: ["dartcam"],
     metrics: [{ value: "MCP", label: "native endpoints" }, { value: "multi", label: "tenant ready" }],
+  },
+  {
+    slug: "arqen",
+    name: "Arqen",
+    tagline: "Backend infrastructure for agent-ready applications",
+    description:
+      "Arqen is Rust-first, language-agnostic backend infrastructure used by GoodOne Watch, with typed tools, durable jobs, discoverable APIs, and thingd integration.",
+    fullDescription:
+      "Arqen is a contract layer between applications, agents, and the systems that operate them. It makes typed tools, durable jobs, manifests, policies, logging, health, and deployment paths explicit while keeping the application boundary language-agnostic. GoodOne Watch uses Arqen's public APIs for its Rust backend, including the HTTP facade, health and readiness endpoints, agent endpoints, storage factory, and Thingd-backed persistence adapters.",
+    emoji: "◈",
+    links: [
+      { type: "github", url: "https://github.com/sayanmohsin/arqen", label: "GitHub" },
+      { type: "website", url: "https://sayanmohsin.github.io/arqen/", label: "documentation" },
+    ],
+    featured: false,
+    status: "in use",
+    tags: ["Rust", "Axum", "Typed tools", "Durable jobs", "CLI"],
+    highlights: [
+      "Typed tools with structured inputs, outputs, permissions, and audit metadata",
+      "Durable jobs with retries, leases, idempotency, and dead letters",
+      "Shared manifests for endpoints, tools, jobs, and runtime metadata",
+      "Health, readiness, tracing, and deployment paths built into the application boundary",
+    ],
+    accent: "#4DA3FF",
+    relatedSlugs: ["goodone-watch", "thingd"],
+    metrics: [{ value: "typed", label: "tools" }, { value: "durable", label: "jobs" }],
+  },
+  {
+    slug: "goodone-watch",
+    name: "GoodOne Watch",
+    tagline: "Find your next good one.",
+    description:
+      "GoodOne Watch is a mobile-first, cross-platform assistant for finding and tracking movies and series across countries, streaming services, and languages.",
+    fullDescription:
+      "GoodOne Watch brings discovery, availability, and personal watch history into one calmer flow. Search for a movie or series, see where it is available for your country, services, and languages, then save it, track progress, rate it, or mark it watched. Its Rust backend is built on Arqen's public APIs and uses Thingd-backed persistence, so the product can keep availability honest, support season-level differences, and build explainable recommendations from explicit activity.",
+    emoji: "🎬",
+    links: [
+      { type: "github", url: "https://github.com/sayanmohsin/goodone-watch" },
+      { type: "website", url: "https://goodone.watch", label: "goodone.watch" },
+    ],
+    featured: false,
+    status: "in progress",
+    tags: ["Expo", "TypeScript", "React Native", "Rust", "Thingd"],
+    highlights: [
+      "Country-, service-, and language-aware availability with honest unknown states",
+      "Season-level availability for series whose providers do not line up",
+      "Watch-later, watching, watched, ratings, notes, likes, and dislikes",
+      "Durable, user-scoped library and progress state backed by Thingd",
+      "Explainable recommendations shaped by searches and explicit activity",
+      "Rust backend built on Arqen's public HTTP, health, agent, and storage APIs",
+    ],
+    accent: "#8B7CFF",
+    relatedSlugs: ["arqen", "thingd"],
+    metrics: [{ value: "3", label: "platforms" }, { value: "season-level", label: "availability" }],
   },
   {
     slug: "clipbuf",
@@ -88,6 +147,7 @@ export const projects: Project[] = [
       "100% offline — clipboard data never leaves your machine",
     ],
     accent: "#6b80ff",
+    relatedSlugs: ["thingd"],
     metrics: [{ value: "<50ms", label: "search" }, { value: "100%", label: "offline" }],
   },
   {
@@ -108,6 +168,7 @@ export const projects: Project[] = [
       "Login/signup, multi-device sync, and backup through thingd Cloud",
     ],
     accent: "#ff6b6b",
+    relatedSlugs: ["thingd"],
     metrics: [{ value: "2–8", label: "players" }, { value: "<10ms", label: "score queries" }],
   },
 ]

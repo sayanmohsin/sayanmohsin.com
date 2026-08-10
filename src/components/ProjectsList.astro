@@ -13,7 +13,7 @@ import { projects } from "../data/projects"
   </div>
 
   <div class="mt-12 grid gap-5 lg:grid-cols-2">
-    {projects.map((p, index) => (
+    {projects.map((p) => (
       <a
         href={`/projects/${p.slug}`}
         class:list={{ "project-card group rounded-2xl p-5 sm:p-7": true, "lg:col-span-2": p.featured }}
@@ -24,8 +24,7 @@ import { projects } from "../data/projects"
             <div class="flex items-center gap-3">
               <span class="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-black/20 text-xl" aria-hidden="true">{p.emoji}</span>
               <div>
-                <p class="eyebrow" style={`color: ${p.accent ?? "#ff6b00"}`}>{p.featured ? "featured system" : `project / 0${index + 1}`}</p>
-                <h2 class="mt-1 text-2xl font-medium tracking-tight text-fg group-hover:text-signal transition-colors">{p.name}</h2>
+                <h2 class="text-2xl font-medium tracking-tight text-fg group-hover:text-signal transition-colors">{p.name}</h2>
               </div>
             </div>
             <span class="text-xl text-dim transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" aria-hidden="true">↗</span>
