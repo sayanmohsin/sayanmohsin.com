@@ -4,8 +4,42 @@ import ThreeCanvas from "./ThreeCanvas.astro"
 
 <ThreeCanvas />
 
-<section class="relative z-10 flex h-screen flex-col items-center justify-center overflow-hidden px-4">
-  <div class="absolute top-6 right-6 z-20 flex items-center gap-4">
+<section class="relative z-10 flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-24">
+  <div class="absolute bottom-8 left-6 hidden items-center gap-2 mono text-[11px] text-dim sm:flex">
+    <span class="status-dot" aria-hidden="true"></span>
+    <span>building useful things</span>
+  </div>
+
+  <div class="relative w-full max-w-6xl">
+    <div class="mx-auto max-w-3xl text-center">
+      <p id="hero-eyebrow" class="eyebrow mb-5">senior software engineer · toronto, canada</p>
+
+      <div class="profile-glow mx-auto mb-7 h-32 w-32 overflow-hidden rounded-full transition-shadow duration-500 sm:h-40 sm:w-40 relative">
+        <img id="profile-image" src="/sayan-mohsin.svg" alt="Sayan Mohsin" class="absolute inset-0 h-full w-full" />
+      </div>
+
+      <h1 id="hero-headline" class="hero-headline text-5xl font-light tracking-[-0.05em] text-white sm:text-7xl lg:text-8xl">
+        I build systems<br class="hidden sm:block" /> <span class="text-signal">that keep moving.</span>
+      </h1>
+
+      <div id="hero-subtitle" class="relative mx-auto mt-6 max-w-xl text-center text-base font-light leading-relaxed text-[#e8e5df] sm:text-lg" style="text-shadow: 0 4px 20px rgba(0,0,0,0.95)"></div>
+
+      <div class="mt-9 flex flex-wrap items-center justify-center gap-3">
+        <a id="hero-primary-cta" href="/projects" class="group btn-filled">
+          <span id="hero-primary-cta-label">explore projects</span>
+          <span class="arrow-wrap relative h-3.5 w-5" aria-hidden="true">
+            <svg class="arrow-main absolute inset-0 h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </span>
+        </a>
+        <a href="mailto:sayanmohsin@outlook.com" class="btn-outline">start a conversation ↗</a>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Social links remain visible without competing with the main action. -->
+  <div class="absolute right-6 bottom-8 hidden items-center gap-4 sm:flex">
     <a
       href="https://github.com/sayanmohsin"
       target="_blank"
@@ -28,48 +62,66 @@ import ThreeCanvas from "./ThreeCanvas.astro"
     </a>
   </div>
 
-  <div class="relative text-center">
-    <div class="profile-glow mx-auto mb-8 h-40 w-40 overflow-hidden rounded-full transition-shadow duration-500 sm:h-48 sm:w-48 relative">
-      <img id="profile-image" src="/sayan-mohsin.svg" alt="Sayan Mohsin" class="absolute inset-0 h-full w-full" />
-    </div>
-
-      <h1 class="text-5xl font-light tracking-tight text-white sm:text-7xl lg:text-8xl">
-        I'm Sayan Mohsin
-      </h1>
-    <div id="hero-subtitle" class="relative mx-auto mt-6 max-w-sm text-center font-light leading-relaxed text-[#e8e5df] sm:max-w-lg" style="text-shadow: 0 4px 20px rgba(0,0,0,0.95)"></div>
-
 <script>
 import texts from "../data/hero-texts.json"
 
 const entry = texts[Math.floor(Math.random() * texts.length)]
 
-const container = document.getElementById("hero-subtitle")
-if (container) {
-  container.innerHTML = entry.lines
-    .map((line, i) => `<div>${i === 0 ? `<span class="text-signal font-mono" style="text-shadow: 0 0 8px rgba(255,107,0,0.5)">></span> ` : ""}${line}</div>`)
-    .join("")
+function applyPersona(persona: (typeof texts)[number], animate = true) {
+  document.documentElement.dataset.persona = persona.id
+  document.documentElement.dataset.personaMode = persona.mode
+  document.documentElement.style.setProperty("--hero-accent", persona.accent)
+
+  const eyebrow = document.getElementById("hero-eyebrow")
+  const headline = document.getElementById("hero-headline")
+  const primaryCta = document.getElementById("hero-primary-cta")
+  const primaryCtaLabel = document.getElementById("hero-primary-cta-label")
+
+  if (animate) {
+    eyebrow?.classList.add("is-transitioning")
+    headline?.classList.add("is-transitioning")
+    primaryCta?.classList.add("is-transitioning")
+  }
+  window.setTimeout(() => {
+    if (eyebrow) eyebrow.textContent = persona.eyebrow
+    if (headline) {
+      headline.innerHTML = `${persona.headline[0]}<br class="hidden sm:block" /> <span class="hero-headline-accent" style="color:${persona.accent}">${persona.headline[1]}</span>`
+    }
+    if (primaryCtaLabel) primaryCtaLabel.textContent = persona.cta
+    eyebrow?.classList.remove("is-transitioning")
+    headline?.classList.remove("is-transitioning")
+    primaryCta?.classList.remove("is-transitioning")
+  }, animate ? 180 : 0)
+
+  const img = document.getElementById("profile-image") as HTMLImageElement | null
+  if (img && img.src !== new URL(persona.image, window.location.origin).href) {
+    if (animate) img.classList.add("is-transitioning")
+    window.setTimeout(() => {
+      img.src = persona.image
+      img.onload = () => img.classList.remove("is-transitioning")
+    }, animate ? 180 : 0)
+  }
+
+  const container = document.getElementById("hero-subtitle")
+  if (container) {
+    if (animate) container.classList.add("is-transitioning")
+    window.setTimeout(() => {
+      container.innerHTML = persona.lines
+        .map((line, i) => `<div>${i === 0 ? `<span class="text-signal font-mono" style="color:${persona.accent};text-shadow:0 0 8px ${persona.accent}80">></span> ` : ""}${line}</div>`)
+        .join("")
+      container.classList.remove("is-transitioning")
+    }, animate ? 180 : 0)
+  }
+
+  window.dispatchEvent(new CustomEvent("persona-change", { detail: persona }))
 }
 
-const images = ["/sayan-mohsin.svg", "/sayan-mohsin-yello.svg"]
-let index = 0
-const img = document.getElementById("profile-image")
-if (img) {
-  setInterval(() => {
-    index = (index + 1) % images.length
-    img.src = images[index]
-  }, 60000)
-}
+applyPersona(entry, false)
+
+let index = texts.findIndex((persona) => persona.id === entry.id)
+window.setInterval(() => {
+  index = (index + 1) % texts.length
+  applyPersona(texts[index])
+}, 60000)
 </script>
-    <a href="/about" class="group btn-filled mt-8 inline-flex">
-      there's more
-      <span class="arrow-wrap relative h-3.5 w-5">
-        <svg class="arrow-main absolute inset-0 h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        <svg class="arrow-ghost absolute inset-0 h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-      </span>
-    </a>
-  </div>
-
-  <footer class="absolute bottom-6 left-0 right-0 text-center">
-    <p class="mono text-xs" style="color:#ffd700; filter:drop-shadow(0 0 6px rgba(255,215,0,0.3))">Toronto, Canada</p>
-  </footer>
 </section>

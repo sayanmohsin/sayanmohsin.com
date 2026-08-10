@@ -1,5 +1,7 @@
 ---
 import "../styles/global.css"
+import SiteNav from "../components/SiteNav.astro"
+import SiteFooter from "../components/SiteFooter.astro"
 interface Props {
   title: string
   description: string
@@ -66,7 +68,9 @@ const personSchema = {
       <script type="application/ld+json" set:html={JSON.stringify(s)}></script>
     ))}
   </head>
-  <body>
-    <slot />
+  <body class:list={{ "home-page": Astro.url.pathname === "/" }}>
+    <SiteNav />
+    <main><slot /></main>
+    {Astro.url.pathname !== "/" && <SiteFooter />}
   </body>
 </html>

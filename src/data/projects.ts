@@ -17,6 +17,8 @@ export interface Project {
   featured: boolean
   tags: string[]
   highlights?: string[]
+  accent?: string
+  metrics?: { value: string; label: string }[]
 }
 
 export const projects: Project[] = [
@@ -42,6 +44,8 @@ export const projects: Project[] = [
       "~15MB static binary — embeddable in Rust, Python, TypeScript, or standalone",
       "Drives clipboard search on clipbuf, score history on dartcam, and cloud sync via thingd Cloud",
     ],
+    accent: "#ff6b00",
+    metrics: [{ value: "15MB", label: "static binary" }, { value: "10k+", label: "writes / sec" }],
   },
   {
     slug: "thingd-cloud",
@@ -63,6 +67,8 @@ export const projects: Project[] = [
       "REST API + MCP endpoints for any app to integrate",
       "Multi-tenant isolation, audit logging, and automated backups",
     ],
+    accent: "#ff9e43",
+    metrics: [{ value: "MCP", label: "native endpoints" }, { value: "multi", label: "tenant ready" }],
   },
   {
     slug: "clipbuf",
@@ -81,6 +87,8 @@ export const projects: Project[] = [
       "Cross-platform: macOS, Windows, Linux — one consistent experience",
       "100% offline — clipboard data never leaves your machine",
     ],
+    accent: "#6b80ff",
+    metrics: [{ value: "<50ms", label: "search" }, { value: "100%", label: "offline" }],
   },
   {
     slug: "dartcam",
@@ -91,10 +99,6 @@ export const projects: Project[] = [
     fullDescription:
       "DartCam is a minimal dart scoring app for iOS, Android, and web. Snap a photo of the board for automatic score detection — all on-device image processing, no internet required. Or tap in scores manually with multiplier validation. Supports 301/501/701/1001 with double-out enforcement, bust detection, undo, and 2-8 player multiplayer with automatic turn rotation. Score history, player stats, and game state are stored locally via thingd's event-sourced engine — game queries and score calculations run in under 10ms. Optionally sync across devices through thingd Cloud, which handles user accounts (login/signup), profile storage, and cloud data sync.",
     emoji: "🎯",
-    links: [
-      { type: "appstore", url: "#" },
-      { type: "playstore", url: "#" },
-    ],
     featured: false,
     tags: ["Flutter", "Dart", "Rust", "Mobile"],
     highlights: [
@@ -103,5 +107,7 @@ export const projects: Project[] = [
       "Cloud sync, accounts, and storage powered by thingd Cloud",
       "Login/signup, multi-device sync, and backup through thingd Cloud",
     ],
+    accent: "#ff6b6b",
+    metrics: [{ value: "2–8", label: "players" }, { value: "<10ms", label: "score queries" }],
   },
 ]
