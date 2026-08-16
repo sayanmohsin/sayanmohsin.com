@@ -102,6 +102,37 @@ export const projects: Project[] = [
     metrics: [{ value: "typed", label: "tools" }, { value: "durable", label: "jobs" }],
   },
   {
+    slug: "go-feather-route",
+    name: "Go Feather Route",
+    tagline: "A featherweight OpenAI-compatible model-routing gateway",
+    description:
+      "Go Feather Route is an open-source Go gateway for routing chat requests across OpenAI-compatible providers with authentication, aliases, retries, timeouts, streaming, and operational health checks.",
+    fullDescription:
+      "Go Feather Route gives applications one focused boundary for model-provider access. It keeps provider credentials server-side while handling bearer authentication, model aliases, request limits, retries, timeouts, bounded concurrency, JSON and Server-Sent Events responses, health and readiness endpoints, and Prometheus-style metrics. It runs as a small static Go binary or non-root multi-architecture Docker image, with optional Thingd MCP connectivity kept as a separate capability boundary. The project is public and open source under the Apache License 2.0.",
+    emoji: "⇄",
+    links: [
+      { type: "github", url: "https://github.com/sayanmohsin/go-feather-route", label: "GitHub" },
+      { type: "website", url: "https://sayanmohsin.github.io/go-feather-route/", label: "GitHub Pages documentation" },
+      { type: "website", url: "https://sayanmohsin.github.io/go-feather-route/api", label: "API reference" },
+      { type: "website", url: "https://sayanmohsin.github.io/go-feather-route/benchmarks", label: "Benchmarks" },
+      { type: "website", url: "https://hub.docker.com/r/sayanmohsin/go-feather-route", label: "Docker Hub" },
+    ],
+    featured: false,
+    status: "open source",
+    tags: ["Go", "OpenAI-compatible", "Routing", "Streaming", "Docker", "Open source"],
+    highlights: [
+      "One authenticated boundary for OpenAI-compatible provider endpoints",
+      "Model aliases, bounded requests, retries, timeouts, and concurrent work",
+      "JSON and Server-Sent Events streaming with prompt client cancellation",
+      "Liveness, readiness, model status, and Prometheus-style metrics",
+      "Static, non-root, multi-architecture Docker images for small hosts",
+      "Public open-source project licensed under Apache-2.0",
+    ],
+    accent: "#7DF9D2",
+    relatedSlugs: ["thingd"],
+    metrics: [{ value: "Go", label: "static binary" }, { value: "SSE", label: "streaming" }],
+  },
+  {
     slug: "goodone-watch",
     name: "GoodOne Watch",
     tagline: "Find your next good one.",
