@@ -1,0 +1,157 @@
+<script>
+import { Application, Container, Graphics } from "pixi.js"
+
+type Persona = {
+  accent: string
+  background: { intensity: number; density: number }
+}
+
+const canvas = document.getElementById("pixi-canvas") as HTMLCanvasElement | null
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+
+if (canvas) {
+  const defaultPersona: Persona = {
+    accent: "#ff6b00",
+    background: { intensity: 1, density: 1 },
+  }
+
+  let persona = defaultPersona
+  let visible = !document.hidden
+  let inViewport = true
+  let destroyed = false
+
+  const hex = (value: string) => Number.parseInt(value.replace("#", ""), 16)
+  const random = (seed: number) => {
+    const value = Math.sin(seed * 12.9898) * 43758.5453
+    return value - Math.floor(value)
+  }
+
+  const start = async () => {
+    const app = new Application()
+    await app.init({
+      canvas,
+      resizeTo: window,
+      backgroundAlpha: 0,
+      antialias: true,
+      autoDensity: true,
+      resolution: Math.min(window.devicePixelRatio, 1.5),
+      powerPreference: "high-performance",
+    })
+
+    const scene = new Container()
+    const lines = new Graphics()
+    const nodes = new Graphics()
+    const glow = new Graphics()
+    scene.addChild(glow, lines, nodes)
+    app.stage.addChild(scene)
+
+    const points = Array.from({ length: 20 }, (_, index) => ({
+      x: 0,
+      y: 0,
+      phase: random(index + 1) * Math.PI * 2,
+      radius: 1.4 + random(index + 20) * 2.2,
+    }))
+    const mouse = { x: 0, y: 0 }
+    const draw = (time = 0) => {
+      const width = window.innerWidth
+      const height = window.innerHeight
+      const isMobile = width < 640
+      const count = isMobile ? 10 : points.length
+      const margin = isMobile ? 24 : 54
+
+      points.slice(0, count).forEach((point, index) => {
+        point.x = margin + random(index * 2 + 11) * Math.max(1, width - margin * 2)
+        point.y = margin + random(index * 2 + 29) * Math.max(1, height - margin * 2)
+      })
+
+      const accent = hex(persona.accent)
+      glow.clear()
+      glow.circle(width * 0.5 + mouse.x * 36, height * 0.42 + mouse.y * 24, isMobile ? 100 : 170)
+      glow.fill({ color: accent, alpha: 0.035 * persona.background.intensity })
+
+      lines.clear()
+      const maxDistance = isMobile ? 180 : 230
+      for (let i = 0; i < count; i += 1) {
+        for (let j = i + 1; j < count; j += 1) {
+          const a = points[i]
+          const b = points[j]
+          const distance = Math.hypot(a.x - b.x, a.y - b.y)
+          if (distance < maxDistance && j - i < 5) {
+            const pulse = 0.05 + Math.max(0, 1 - distance / maxDistance) * 0.16
+            lines.moveTo(a.x, a.y)
+            lines.lineTo(b.x, b.y)
+            lines.stroke({ color: accent, alpha: pulse * persona.background.density, width: 1 })
+          }
+        }
+      }
+
+      nodes.clear()
+      for (let index = 0; index < count; index += 1) {
+        const point = points[index]
+        const distanceToMouse = Math.hypot(point.x - (width * (mouse.x + 1)) / 2, point.y - (height * (mouse.y + 1)) / 2)
+        const interaction = Math.max(0, 1 - distanceToMouse / 260)
+        const pulse = 0.5 + Math.sin(time * 0.001 + point.phase) * 0.5
+        nodes.circle(point.x + mouse.x * interaction * 12, point.y + mouse.y * interaction * 12, point.radius + pulse * 1.6 + interaction * 2)
+        nodes.fill({ color: accent, alpha: (0.28 + pulse * 0.35 + interaction * 0.25) * persona.background.intensity })
+      }
+    }
+
+    const render = (ticker: { elapsedMS: number }) => draw(performance.now() + ticker.elapsedMS)
+    const syncLoop = () => {
+      if (destroyed) return
+      if (!prefersReducedMotion && visible && inViewport) app.ticker.add(render)
+      else app.ticker.remove(render)
+      draw()
+    }
+    const handlePointerMove = (event: PointerEvent) => {
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1
+      mouse.y = (event.clientY / window.innerHeight) * 2 - 1
+    }
+    const handlePersonaChange = (event: Event) => {
+      const next = (event as CustomEvent<Persona>).detail
+      if (next?.accent && next?.background) {
+        persona = next
+        draw()
+      }
+    }
+    const handleVisibilityChange = () => {
+      visible = !document.hidden
+      syncLoop()
+    }
+    const handleResize = () => draw()
+    const observer = new IntersectionObserver(([entry]) => {
+      inViewport = entry.isIntersecting
+      syncLoop()
+    })
+
+    observer.observe(canvas)
+    window.addEventListener("pointermove", handlePointerMove, { passive: true })
+    window.addEventListener("persona-change", handlePersonaChange)
+    window.addEventListener("resize", handleResize)
+    document.addEventListener("visibilitychange", handleVisibilityChange)
+    window.addEventListener("pagehide", cleanup, { once: true })
+
+    function cleanup() {
+      if (destroyed) return
+      destroyed = true
+      observer.disconnect()
+      window.removeEventListener("pointermove", handlePointerMove)
+      window.removeEventListener("persona-change", handlePersonaChange)
+      window.removeEventListener("resize", handleResize)
+      document.removeEventListener("visibilitychange", handleVisibilityChange)
+      app.destroy(true, { children: true })
+    }
+
+    draw()
+    syncLoop()
+  }
+
+  start().catch(() => canvas.remove())
+}
+</script>
+
+<canvas id="pixi-canvas" class="pointer-events-none fixed inset-0 z-0 h-screen w-screen" aria-hidden="true"></canvas>
+
+<noscript>
+  <div class="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_center,rgba(255,107,0,0.16),transparent_45%)]"></div>
+</noscript>
