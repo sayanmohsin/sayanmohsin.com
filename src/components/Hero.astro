@@ -38,4 +38,39 @@ const homepageProjects = getFeaturedProjects(projects)
   </div>
 
   <div class="home-minimal__footer mono" aria-hidden="true">software / tools / experiments</div>
+  <span class="home-minimal__swipe mono" aria-hidden="true">swipe up · see the work</span>
 </section>
+
+<script>
+  const mobileSwipeQuery = window.matchMedia("(max-width: 760px) and (pointer: coarse)")
+  const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
+  let touchStart: { x: number; y: number } | null = null
+  let navigating = false
+
+  const handleTouchStart = (event: TouchEvent) => {
+    if (!mobileSwipeQuery.matches || navigating || event.touches.length !== 1) return
+    const touch = event.touches[0]
+    touchStart = { x: touch.clientX, y: touch.clientY }
+  }
+
+  const handleTouchEnd = (event: TouchEvent) => {
+    if (!mobileSwipeQuery.matches || navigating || !touchStart || event.changedTouches.length !== 1) return
+    const touch = event.changedTouches[0]
+    const deltaX = touch.clientX - touchStart.x
+    const deltaY = touch.clientY - touchStart.y
+    const startedOnControl = (event.target as HTMLElement | null)?.closest("a, button, input, textarea, select")
+    touchStart = null
+
+    if (startedOnControl || window.scrollY > 8 || deltaY > -72 || Math.abs(deltaY) < Math.abs(deltaX) * 1.2) return
+    navigating = true
+    if (reducedMotionQuery.matches) {
+      window.location.assign("/projects")
+      return
+    }
+    document.documentElement.classList.add("mobile-page-leaving")
+    window.setTimeout(() => window.location.assign("/projects"), 280)
+  }
+
+  document.addEventListener("touchstart", handleTouchStart, { passive: true })
+  document.addEventListener("touchend", handleTouchEnd, { passive: true })
+</script>

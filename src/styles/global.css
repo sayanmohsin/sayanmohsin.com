@@ -61,7 +61,7 @@ main {
   top: 0;
   isolation: isolate;
   pointer-events: none;
-  background: linear-gradient(to bottom, rgba(244, 239, 230, 0.97), rgba(244, 239, 230, 0.84) 68%, transparent);
+  background: transparent;
 }
 
 .home-page .site-nav {
@@ -123,6 +123,8 @@ main {
 
 .nav-link {
   position: relative;
+  display: inline-flex;
+  align-items: center;
   color: var(--color-dim);
   font-family: "JetBrains Mono", "SF Mono", monospace;
   font-size: 0.7rem;
@@ -131,10 +133,9 @@ main {
 }
 
 .nav-link::before {
+  position: absolute;
+  left: -0.48rem;
   content: "•";
-  display: inline-block;
-  width: 0.7rem;
-  margin-right: 0.15rem;
   color: transparent;
 }
 
@@ -276,6 +277,9 @@ main {
 .home-project-timeline__card:hover, .home-project-timeline__card:focus-visible, .home-project-timeline__card.is-home-selected { border-color: var(--home-project-accent); background: color-mix(in srgb, var(--home-project-accent) 24%, rgba(11, 13, 18, 0.8)); box-shadow: 0 0 2.5rem color-mix(in srgb, var(--home-project-accent) 28%, transparent); transform: translateY(-0.2rem) scale(1.03); }
 .home-minimal__work-all { display: inline-flex; gap: 0.35rem; margin-top: 1rem; color: #ffcf4a; font-size: 0.62rem; text-transform: uppercase; }
 .home-minimal__footer { right: 0; bottom: 1.2rem; left: 0; color: rgba(242, 238, 231, 0.42); font-size: 0.58rem; letter-spacing: 0.08em; text-align: center; text-transform: uppercase; }
+.home-minimal__swipe { display: none; }
+.mobile-page-leaving::after { position: fixed; inset: 0; z-index: 100; background: var(--orange); content: ""; pointer-events: none; animation: mobile-page-wipe 0.28s ease-in forwards; }
+@keyframes mobile-page-wipe { from { opacity: 0; transform: translateY(100%); } to { opacity: 1; transform: translateY(0); } }
 
 .project-workbench {
   position: relative;
@@ -512,6 +516,7 @@ a:hover {
   .home-project-timeline__footer span { display: block; }
   .home-minimal__work-all { margin-top: 0.7rem; font-size: 0.55rem; }
   .home-minimal__footer { right: 1rem; bottom: 1.2rem; left: 1rem; font-size: 0.5rem; }
+  .home-minimal__swipe { display: block; margin: -1rem auto 1.25rem; color: var(--muted-ink); font-size: 0.52rem; letter-spacing: 0.08em; text-align: center; text-transform: uppercase; }
   .project-workbench { padding: 2rem 1rem 4rem; }
   .project-workbench__header { display: block; }
   .project-workbench__count { display: block; margin-top: 0.75rem; }
@@ -738,7 +743,7 @@ body {
 }
 
 a:hover { color: var(--ink); }
-.site-nav { background: rgba(244, 239, 230, 0.98); box-shadow: 0 0.6rem 1.4rem rgba(82, 63, 42, 0.04); }
+.site-nav { background: transparent; box-shadow: none; }
 .brand-mark { color: var(--ink); }
 .brand-mark__label { color: var(--mint); }
 .nav-cluster { border-color: rgba(31, 28, 24, 0.14); background: rgba(255, 252, 247, 0.78); box-shadow: 0 12px 30px rgba(82, 63, 42, 0.08); }
