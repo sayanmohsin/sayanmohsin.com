@@ -217,8 +217,8 @@ main {
 
 .home-minimal {
   position: relative;
-  min-height: 100svh;
-  overflow: hidden;
+  min-height: max(100svh, 52rem);
+  overflow: visible;
   background:
     radial-gradient(circle at 76% 46%, rgba(125, 249, 210, 0.11), transparent 22rem),
     radial-gradient(circle at 62% 30%, rgba(255, 107, 0, 0.1), transparent 19rem),
@@ -481,7 +481,7 @@ a:hover {
   .nav-link { font-size: 0.64rem; }
   .nav-divider { display: none; }
 
-  .home-minimal { min-height: 100svh; overflow: clip; }
+  .home-minimal { min-height: max(100svh, 52rem); overflow: visible; }
   .home-minimal__canvas { top: 20%; right: 0; bottom: 0; left: 0; }
   .home-minimal__top { position: relative; top: auto; left: auto; margin-top: 4.75rem; font-size: 0.55rem; }
   .home-minimal__layout { position: relative; top: auto; right: auto; bottom: auto; left: auto; display: flex; width: 100%; height: auto; flex-direction: column; align-items: stretch; gap: 1.4rem; padding-top: 2.5rem; padding-bottom: 4.5rem; transform: none; }
