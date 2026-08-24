@@ -3,15 +3,16 @@ const path = Astro.url.pathname
 const isActive = (href: string) => path === href || (href !== "/" && path.startsWith(`${href}/`))
 ---
 
-<header class="site-nav inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6 sm:pt-6">
-  <nav class="mx-auto flex max-w-6xl items-center justify-between" aria-label="Main navigation">
+<header class="site-nav inset-x-0 top-0 z-50" aria-label="Site navigation">
+  <nav class="site-nav__inner flex items-center justify-between" aria-label="Main navigation">
     <a href="/" class="brand-mark" aria-label="Sayan Mohsin home">
       <img src="/sayamojie.svg" alt="" width="30" height="30" />
+      <span class="brand-mark__label">sayan_mohsin</span>
     </a>
 
     <div class="nav-cluster">
       <a href="/about" class:list={{ "nav-link": true, "is-active": isActive("/about") }}>about</a>
-      <a href="/projects" class:list={{ "nav-link": true, "is-active": isActive("/projects") }}>projects</a>
+      <a href="/projects" class:list={{ "nav-link": true, "is-active": isActive("/projects") }}>work</a>
       <span class="nav-divider" aria-hidden="true"></span>
       <a href="https://github.com/sayanmohsin" target="_blank" rel="noopener noreferrer" class="nav-link" aria-label="GitHub (opens in a new tab)">github ↗</a>
     </div>

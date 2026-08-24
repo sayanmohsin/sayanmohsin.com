@@ -21,6 +21,7 @@ export interface Project {
   highlights?: string[]
   accent?: string
   metrics?: { value: string; label: string }[]
+  downloadManifestUrl?: string
 }
 
 export const projects: Project[] = [
@@ -88,7 +89,7 @@ export const projects: Project[] = [
       { type: "github", url: "https://github.com/sayanmohsin/arqen", label: "GitHub" },
       { type: "website", url: "https://sayanmohsin.github.io/arqen/", label: "documentation" },
     ],
-    featured: false,
+    featured: true,
     status: "in use",
     tags: ["Rust", "Axum", "Typed tools", "Durable jobs", "CLI"],
     highlights: [
@@ -117,7 +118,7 @@ export const projects: Project[] = [
       { type: "website", url: "https://sayanmohsin.github.io/go-feather-route/benchmarks", label: "Benchmarks" },
       { type: "website", url: "https://hub.docker.com/r/sayanmohsin/go-feather-route", label: "Docker Hub" },
     ],
-    featured: false,
+    featured: true,
     status: "open source",
     tags: ["Go", "OpenAI-compatible", "Routing", "Streaming", "Docker", "Open source"],
     highlights: [
@@ -178,6 +179,7 @@ export const projects: Project[] = [
       "100% offline — clipboard data never leaves your machine",
     ],
     accent: "#6b80ff",
+    downloadManifestUrl: "https://storage.googleapis.com/clipbuf-releases/versions.json",
     relatedSlugs: ["thingd"],
     metrics: [{ value: "<50ms", label: "search" }, { value: "100%", label: "offline" }],
   },

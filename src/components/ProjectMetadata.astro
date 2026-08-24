@@ -1,0 +1,39 @@
+---
+import type { Project } from "../data/projects"
+import { getProjectAccent, getProjectStatus } from "../lib/projectPresentation"
+import TechnologyMark from "./TechnologyMark.astro"
+
+interface Props {
+  project: Project
+}
+
+const { project } = Astro.props
+const accent = getProjectAccent(project)
+---
+
+<aside class="project-detail-overview" style={`--overview-accent: ${accent}`}>
+  <div class="project-detail-overview__topline mono">
+    <span>project notes</span>
+    <span>{getProjectStatus(project)}</span>
+  </div>
+
+  <div class="project-detail-overview__section">
+    <p class="eyebrow">built with</p>
+    <div class="project-detail-overview__tags mono">
+      {project.tags.map((tag) => (
+        <span><TechnologyMark label={tag} />{tag}</span>
+      ))}
+    </div>
+  </div>
+
+  {project.metrics && project.metrics.length > 0 && (
+    <div class="project-detail-overview__metrics">
+      {project.metrics.map((metric) => (
+        <div>
+          <strong>{metric.value}</strong>
+          <span class="mono">{metric.label}</span>
+        </div>
+      ))}
+    </div>
+  )}
+</aside>

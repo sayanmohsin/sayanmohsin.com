@@ -1,0 +1,41 @@
+---
+import type { Project } from "../data/projects"
+import { getProjectAccent } from "../lib/projectPresentation"
+
+interface Props {
+  project: Project
+  index: number
+  variant?: "graph" | "compact"
+  selected?: boolean
+}
+
+const { project, index, variant = "graph", selected = false } = Astro.props
+const accent = getProjectAccent(project)
+---
+
+<a
+  class:list={{ "project-graph__node": variant === "graph", "project-node": variant === "compact", "is-selected": selected }}
+  href={`/projects/${project.slug}`}
+  data-project-slug={project.slug}
+  data-project-name={project.name}
+  data-project-accent={accent}
+  data-node-kind="project"
+  style={`--graph-accent: ${accent}; --project-accent: ${accent}`}
+  aria-label={`open ${project.name} project`}
+>
+  {variant === "compact" ? (
+    <>
+      <span class="project-node__identity">
+        <span aria-hidden="true">{project.emoji}</span>
+        <strong>{project.name}</strong>
+      </span>
+      <span class="project-node__action mono">explore ↗</span>
+    </>
+  ) : (
+    <>
+      <span class="project-graph__node-number mono">{String(index + 1).padStart(2, "0")}</span>
+      <span class="project-graph__node-symbol" aria-hidden="true">{project.emoji}</span>
+      <strong>{project.name}</strong>
+    </>
+  )}
+</a>

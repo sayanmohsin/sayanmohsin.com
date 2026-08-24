@@ -1,0 +1,8 @@
+---
+interface Props { label: string }
+import { getTechnologyMark } from "../lib/projectPresentation"
+const { label } = Astro.props
+const mark = getTechnologyMark(label)
+---
+
+<span class="technology-mark" aria-hidden="true">{mark}</span>

@@ -1,0 +1,15 @@
+---
+import { projects } from "../data/projects"
+import ProjectGraph from "./ProjectGraph.astro"
+---
+
+<section id="project-workbench" class="project-workbench" aria-labelledby="project-workbench-title">
+  <div class="project-workbench__header">
+    <div>
+      <p class="eyebrow">selected work / 2023—now</p>
+      <h2 id="project-workbench-title">a few things i’ve made<span class="text-signal">.</span></h2>
+    </div>
+    <span class="project-workbench__count mono">{projects.length} projects / always evolving</span>
+  </div>
+  <ProjectGraph mode="dashboard" projects={projects} />
+</section>

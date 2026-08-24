@@ -39,7 +39,7 @@ function label(type: string, url: string): string {
 
 {
   links.length > 0 && (
-    <div class={links[0].type === "download" ? "mt-3 space-y-2" : "mt-8 space-y-1 mono text-sm"}>
+    <div class={`project-links ${links[0].type === "download" ? "mt-3 space-y-2" : "mt-8 space-y-2"}`}>
       {links.map((link) =>
         link.type === "download" ? (
           <a
@@ -53,10 +53,11 @@ function label(type: string, url: string): string {
             <span>{link.label ?? label(link.type, link.url)}</span>
           </a>
         ) : (
-          <div class="flex items-center gap-2 mono text-sm">
+          <div class="project-link-row">
             <fragment set:html={icon(link.type)} />
-            <a href={link.url} target="_blank" rel="noopener noreferrer" class="text-dim hover:text-fg transition-colors" style={`color: ${accent}`}>
+            <a href={link.url} target="_blank" rel="noopener noreferrer" class="project-link" style={`--link-accent: ${accent}`}>
               {link.label ?? label(link.type, link.url)}
+              <span aria-hidden="true">↗</span>
             </a>
           </div>
         )
@@ -81,5 +82,36 @@ function label(type: string, url: string): string {
   .dl-pill:hover {
     border-color: var(--dl-accent);
     color: var(--dl-accent);
+  }
+  .project-link-row {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+  .project-link-row > svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    flex: 0 0 auto;
+    color: var(--link-accent, var(--orange));
+  }
+  .project-link {
+    display: inline-flex;
+    min-width: 0;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--link-accent, var(--orange)) 32%, var(--line));
+    color: var(--ink);
+    font-family: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
+    font-size: 0.7rem;
+    overflow-wrap: anywhere;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  }
+  .project-link span { color: var(--link-accent, var(--orange)); }
+  .project-link:hover, .project-link:focus-visible {
+    border-color: var(--link-accent, var(--orange));
+    color: var(--ink);
+    background: color-mix(in srgb, var(--link-accent, var(--orange)) 10%, transparent);
+    outline: none;
   }
 </style>

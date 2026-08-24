@@ -3,11 +3,10 @@ import ProjectLinks from "./ProjectLinks.astro"
 
 interface Props {
   accent?: string
+  manifestUrl?: string
 }
 
-const { accent = "#6b80ff" } = Astro.props
-
-const MANIFEST_URL = "https://storage.googleapis.com/clipbuf-releases/versions.json"
+const { accent = "#6b80ff", manifestUrl = "https://storage.googleapis.com/clipbuf-releases/versions.json" } = Astro.props
 
 interface VersionManifest {
   latest: string
@@ -23,7 +22,7 @@ const platforms = [
 
 let manifest: VersionManifest | null = null
 try {
-  const res = await fetch(MANIFEST_URL)
+  const res = await fetch(manifestUrl)
   if (res.ok) manifest = await res.json()
 } catch {}
 

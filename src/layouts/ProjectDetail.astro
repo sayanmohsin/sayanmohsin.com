@@ -3,53 +3,30 @@ import type { Project } from "../data/projects"
 import { projects } from "../data/projects"
 import ProjectLinks from "../components/ProjectLinks.astro"
 import DownloadSection from "../components/DownloadSection.astro"
+import ProjectMetadata from "../components/ProjectMetadata.astro"
+import RelatedProjects from "../components/RelatedProjects.astro"
+import { getProjectAccent, getRelatedProjects } from "../lib/projectPresentation"
 
 export interface Props { project: Project }
 const { project } = Astro.props
-const accent = project.accent ?? "#ff6b00"
-const relatedProjects = (project.relatedSlugs ?? [])
-  .map((slug) => projects.find((item) => item.slug === slug))
-  .filter((item): item is Project => Boolean(item))
+const accent = getProjectAccent(project)
+const relatedProjects = getRelatedProjects(project, projects)
 ---
 
-<section class="mx-auto max-w-6xl px-4 pb-16 pt-28 sm:px-6 sm:pb-24 sm:pt-36">
+<section class="page-refresh mx-auto max-w-6xl px-4 pb-16 pt-28 sm:px-6 sm:pb-24 sm:pt-36">
   <a href="/projects" class="mono text-sm text-dim transition-colors hover:text-fg">← all projects</a>
 
-  <div class="mt-12 grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+  <div class="mt-10 grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
     <div>
       <div class="flex flex-wrap items-center gap-3 sm:gap-4">
         <span class="text-4xl" aria-hidden="true">{project.emoji}</span>
         <h1 class="min-w-0 break-words text-4xl font-light tracking-[-0.05em] text-fg sm:text-7xl">{project.name}<span style={`color: ${accent}`}>.</span></h1>
       </div>
       <p class="mt-6 max-w-2xl text-xl font-light leading-relaxed text-dim">{project.tagline}</p>
-      <div class="mt-6 flex flex-wrap gap-2 mono text-[11px] text-dim/75">
-        {project.tags.map((tag) => <span class="rounded-full border border-white/10 px-2.5 py-1">{tag}</span>)}
-      </div>
     </div>
 
-    <div class="surface rounded-2xl p-5" style={`--diagram-accent: ${accent}`}>
-      <p class="eyebrow">system shape</p>
-      <div class="diagram-flow mt-5 flex items-center gap-2 mono text-xs text-dim">
-        <span class="rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-fg">{project.slug === "goodone-watch" ? "title search" : project.slug === "arqen" ? "client / agent" : "input"}</span>
-        <span class="diagram-line"></span>
-        <span class="rounded-lg border px-3 py-2 text-fg" style={`border-color: ${accent}80`}>{project.slug === "goodone-watch" ? "GoodOne" : project.slug === "arqen" ? "Arqen API" : "engine"}</span>
-        <span class="diagram-line"></span>
-        <span class="rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-fg">{project.slug === "goodone-watch" ? "availability + library" : project.slug === "arqen" ? "tools · jobs · logs" : "output"}</span>
-      </div>
-      <p class="mt-5 text-sm leading-relaxed text-dim">{project.slug === "goodone-watch" ? "A calmer path from finding something to watch to remembering what mattered." : project.slug === "arqen" ? "A composable contract layer for software that people, programs, and agents can operate." : "A focused piece of infrastructure with a small surface area and a lot of leverage."}</p>
-    </div>
+    <ProjectMetadata project={project} />
   </div>
-
-  {project.metrics && (
-    <div class="mt-12 grid gap-3 sm:grid-cols-2 lg:max-w-2xl">
-      {project.metrics.map((metric) => (
-        <div class="metric-card" style={`--metric-accent: ${accent}`}>
-          <p class="text-2xl font-medium text-fg">{metric.value}</p>
-          <p class="mono mt-1 text-[10px] uppercase tracking-[0.1em] text-dim">{metric.label}</p>
-        </div>
-      ))}
-    </div>
-  )}
 
   <div class="mt-16 grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
     <div>
@@ -75,19 +52,7 @@ const relatedProjects = (project.relatedSlugs ?? [])
   </div>
 
   {project.links && project.links.length > 0 && <ProjectLinks links={project.links} accent={accent} />}
-  {project.slug === "clipbuf" && <DownloadSection accent={accent} />}
+  {project.downloadManifestUrl && <DownloadSection accent={accent} manifestUrl={project.downloadManifestUrl} />}
 
-  {relatedProjects.length > 0 && (
-    <div class="mt-16 border-t border-line pt-7">
-      <p class="eyebrow">related systems</p>
-      <div class="mt-4 flex flex-wrap gap-3">
-        {relatedProjects.map((related) => (
-          <a href={`/projects/${related.slug}`} class="surface group rounded-xl px-4 py-3 transition-colors hover:border-signal/50">
-            <span class="mono text-xs text-dim">{related.emoji} {related.name}</span>
-            <span class="ml-3 text-sm text-fg transition-colors group-hover:text-signal">explore ↗</span>
-          </a>
-        ))}
-      </div>
-    </div>
-  )}
+  <RelatedProjects projects={relatedProjects} />
 </section>
