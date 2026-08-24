@@ -1,8 +1,9 @@
 ---
-interface Props { label: string }
-import { getTechnologyMark } from "../lib/projectPresentation"
-const { label } = Astro.props
-const mark = getTechnologyMark(label)
+interface Props { label: string; mark?: string }
+import { getTechnologyColor, getTechnologyMark } from "../lib/projectPresentation"
+const { label, mark: providedMark } = Astro.props
+const mark = providedMark ?? getTechnologyMark(label)
+const color = getTechnologyColor(label)
 ---
 
-<span class="technology-mark" aria-hidden="true">{mark}</span>
+<span class="technology-mark" style={`--technology-color: ${color}`} aria-hidden="true">{mark}</span>

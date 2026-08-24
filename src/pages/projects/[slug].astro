@@ -31,21 +31,21 @@ const appSchemas: Record<string, Record<string, unknown>> = {
     name: "thingd",
     operatingSystem: "macOS, Linux, Docker",
     applicationCategory: "DeveloperApplication",
-    description: "Open-source Rust data engine with SQLite, durable queues, event streams, full-text search, graph links, and MCP tools.",
+    description: "Open-source Rust data engine with persistent storage, durable queues, event streams, full-text search, graph links, and MCP access.",
     author: { "@type": "Person", name: "Sayan Mohsin" },
   },
   "thingd-cloud": {
     "@type": "WebApplication",
     name: "thingd Cloud",
     applicationCategory: "BusinessApplication",
-    description: "Managed SaaS hosting for thingd with hosted MCP endpoints, team dashboard, and API key management.",
+    description: "Private hosted-control-plane foundation for Thingd projects, MCP access, dashboards, and API-key management.",
     author: { "@type": "Person", name: "Sayan Mohsin" },
   },
   arqen: {
     "@type": "SoftwareApplication",
     name: "Arqen",
     applicationCategory: "DeveloperApplication",
-    description: "Backend infrastructure for agent-ready applications with typed tools, durable jobs, discoverable APIs, and optional thingd integration.",
+    description: "Rust-first backend toolkit with typed tools, durable jobs, explicit HTTP boundaries, and optional Thingd adapters.",
     author: { "@type": "Person", name: "Sayan Mohsin" },
     programmingLanguage: "Rust",
     url: "https://sayanmohsin.github.io/arqen/",
@@ -88,6 +88,13 @@ const appSchemas: Record<string, Record<string, unknown>> = {
 }
 
 const schema = appSchemas[project.slug]
+  ? {
+      ...appSchemas[project.slug],
+      description: project.description,
+      keywords: project.technologies.map((technology) => technology.name).join(", "),
+      sameAs: project.links?.filter((link) => link.type === "github").map((link) => link.url),
+    }
+  : undefined
 
 const metaDescription =
   project.description.length > project.tagline.length

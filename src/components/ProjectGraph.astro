@@ -23,6 +23,28 @@ const detailNodes = project
     ]
   : []
 const nodeCount = mode === "detail" ? detailNodes.length + 1 : graphProjects.length
+const integrationEdges = graphProjects.flatMap((source) => (source.integrations ?? []).map((integration) => {
+  // Thingd and Arqen are infrastructure sources in the visual language. The
+  // catalog keeps consumer-facing dependency records for detail pages, while
+  // the graph reverses those edges so power visibly travels outward.
+  const reversesForFoundation = ["thingd", "arqen"].includes(integration.targetSlug) && source.slug !== integration.targetSlug
+  return {
+    source: reversesForFoundation ? integration.targetSlug : source.slug,
+    target: reversesForFoundation ? source.slug : integration.targetSlug,
+    mode: integration.mode,
+  }
+}))
+const integrationPriority = { planned: 0, optional: 1, local: 2, production: 3 }
+const graphEdges = [...integrationEdges.reduce((map, edge) => {
+  const key = `${edge.source}:${edge.target}`
+  const current = map.get(key)
+  if (!current || integrationPriority[edge.mode] > integrationPriority[current.mode]) map.set(key, edge)
+  return map
+}, new Map<string, (typeof integrationEdges)[number]>()).values()]
+const graphData = {
+  projects: graphProjects.map(({ slug, name, tagline, emoji, accent, status }) => ({ slug, name, tagline, emoji, accent, status })),
+  edges: graphEdges,
+}
 ---
 
 <section id={graphId} class:list={{ "project-graph": true, "project-graph--home": mode === "home", "project-graph--dashboard": mode === "dashboard", "project-graph--detail": mode === "detail" }} data-graph-mode={mode} aria-label={mode === "detail" ? `${project?.name} project shape` : "project constellation"}>
@@ -36,7 +58,7 @@ const nodeCount = mode === "detail" ? detailNodes.length + 1 : graphProjects.len
 
   <div class="project-graph__heading mono">
     <span>{mode === "detail" ? "project shape" : mode === "home" ? "selected work" : "all projects"}</span>
-    <span>{mode !== "detail" ? "thingd / powering the work" : `${String(nodeCount).padStart(2, "0")} nodes`}</span>
+    <span>{mode !== "detail" ? "verified wiring" : `${String(nodeCount).padStart(2, "0")} nodes`}</span>
   </div>
 
   <div class="project-graph__nodes">
@@ -69,7 +91,7 @@ const nodeCount = mode === "detail" ? detailNodes.length + 1 : graphProjects.len
   <p class="project-graph__fallback mono">open a node to explore the full project</p>
 </section>
 
-<script id={`${graphId}-data`} type="application/json" set:html={JSON.stringify(graphProjects)}></script>
+<script id={`${graphId}-data`} type="application/json" set:html={JSON.stringify(graphData)}></script>
 
 <script>
   import { Application, Graphics } from "pixi.js"
@@ -79,11 +101,14 @@ const nodeCount = mode === "detail" ? detailNodes.length + 1 : graphProjects.len
   const mode = graph?.dataset.graphMode ?? "home"
   const canvas = graph?.querySelector<HTMLCanvasElement>(".project-graph__canvas")
   const nodes = Array.from(graph?.querySelectorAll<HTMLElement>(".project-graph__node") ?? [])
-  const data = JSON.parse(document.getElementById(`${graphId}-data`)?.textContent ?? "[]")
+  const data = JSON.parse(document.getElementById(`${graphId}-data`)?.textContent ?? '{"projects":[],"edges":[]}') as {
+    projects: Array<{ slug: string; name: string; tagline: string; emoji: string; status: string }>
+    edges: Array<{ source: string; target: string; mode: string }>
+  }
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
 
   if (graph && canvas && nodes.length > 0) {
-    let points: Array<{ x: number; y: number; accent: number }> = []
+    let points: Array<{ x: number; y: number; accent: number; slug: string }> = []
     let selectedIndex = 0
     let visible = !document.hidden
     let inViewport = true
@@ -106,7 +131,7 @@ const nodeCount = mode === "detail" ? detailNodes.length + 1 : graphProjects.len
         const graphBounds = graph.getBoundingClientRect()
         points = nodes.map((node) => {
           const bounds = node.getBoundingClientRect()
-          return { x: bounds.left - graphBounds.left + bounds.width / 2, y: bounds.top - graphBounds.top + bounds.height / 2, accent: parseAccent(node.dataset.projectAccent ?? "#e86f35") }
+          return { x: bounds.left - graphBounds.left + bounds.width / 2, y: bounds.top - graphBounds.top + bounds.height / 2, accent: parseAccent(node.dataset.projectAccent ?? "#e86f35"), slug: node.dataset.projectSlug ?? "" }
         })
       }
 
@@ -119,7 +144,10 @@ const nodeCount = mode === "detail" ? detailNodes.length + 1 : graphProjects.len
         const driftX = pointer.x * 4
         const driftY = pointer.y * 3
         pulse = Math.max(0, pulse - 0.025)
-        const origin = points[0]
+        const pointBySlug = new Map(points.map((point) => [point.slug, point]))
+        const edges = data.edges
+          .map((edge) => ({ ...edge, source: pointBySlug.get(edge.source), target: pointBySlug.get(edge.target) }))
+          .filter((edge): edge is { source: NonNullable<typeof edge.source>; target: NonNullable<typeof edge.target>; mode: string } => Boolean(edge.source && edge.target))
         const curvePoint = (start: { x: number; y: number }, end: { x: number; y: number }, progress: number) => {
           const bendX = (start.x + end.x) / 2
           const bendY = Math.min(start.y, end.y) - Math.min(30, height * 0.04)
@@ -133,54 +161,56 @@ const nodeCount = mode === "detail" ? detailNodes.length + 1 : graphProjects.len
 
         paths.clear()
         flow.clear()
-        if (origin && points.length > 1) {
-          points.slice(1).forEach((point) => {
-            const bendX = (origin.x + point.x) / 2
-            const bendY = Math.min(origin.y, point.y) - Math.min(30, height * 0.04)
-            paths.moveTo(origin.x + driftX * 0.35, origin.y + driftY * 0.35)
-            paths.quadraticCurveTo(bendX + driftX * 0.35, bendY + driftY * 0.35, point.x + driftX * 0.35, point.y + driftY * 0.35)
-            paths.stroke({ color: point.accent, alpha: mode !== "detail" ? 0.2 + pulse * 0.1 : 0.13 + pulse * 0.08, width: mode !== "detail" ? 1.2 : 1 })
+        if (edges.length > 0) {
+          edges.forEach(({ source, target, mode: edgeMode }) => {
+            const bendX = (source.x + target.x) / 2
+            const bendY = Math.min(source.y, target.y) - Math.min(30, height * 0.04)
+            paths.moveTo(source.x + driftX * 0.35, source.y + driftY * 0.35)
+            paths.quadraticCurveTo(bendX + driftX * 0.35, bendY + driftY * 0.35, target.x + driftX * 0.35, target.y + driftY * 0.35)
+            paths.stroke({ color: target.accent, alpha: edgeMode === "production" ? 0.34 + pulse * 0.1 : edgeMode === "local" ? 0.25 : mode === "home" ? 0.26 : 0.14, width: edgeMode === "production" ? 1.5 : 1 })
 
-            if (mode !== "detail") {
-              flow.moveTo(origin.x + driftX * 0.35, origin.y + driftY * 0.35)
-              flow.quadraticCurveTo(bendX + driftX * 0.35, bendY + driftY * 0.35, point.x + driftX * 0.35, point.y + driftY * 0.35)
-              flow.stroke({ color: origin.accent, alpha: 0.08, width: 3 })
+            if (edgeMode !== "planned") {
+              flow.moveTo(source.x + driftX * 0.35, source.y + driftY * 0.35)
+              flow.quadraticCurveTo(bendX + driftX * 0.35, bendY + driftY * 0.35, target.x + driftX * 0.35, target.y + driftY * 0.35)
+              flow.stroke({ color: source.accent, alpha: edgeMode === "production" ? 0.16 : mode === "home" ? 0.14 : 0.07, width: edgeMode === "production" ? 3.5 : 2.5 })
             }
           })
         }
 
         particles.clear()
-        if (origin && points.length > 1 && !reducedMotion) {
-          points.slice(1).forEach((point, index) => {
-            for (let lane = 0; lane < (mode !== "detail" ? 2 : 1); lane += 1) {
-              const progress = (motion * (mode !== "detail" ? 0.055 : 0.07) + index * 0.29 + lane * 0.47) % 1
-              const packet = curvePoint(origin, point, progress)
-              const nextPacket = curvePoint(origin, point, Math.min(1, progress + 0.025))
+        if (edges.length > 0 && !reducedMotion) {
+          edges.forEach(({ source, target, mode: edgeMode }, index) => {
+            if (edgeMode === "planned") return
+            for (let lane = 0; lane < (edgeMode === "production" && mode !== "detail" ? 2 : 1); lane += 1) {
+              const speed = edgeMode === "production" ? 0.075 : 0.065
+              const progress = (motion * speed + index * 0.29 + lane * 0.47) % 1
+              const packet = curvePoint(source, target, progress)
+              const nextPacket = curvePoint(source, target, Math.min(1, progress + 0.025))
               const packetX = packet.x + driftX * 0.35
               const packetY = packet.y + driftY * 0.35
               for (let trail = 3; trail >= 0; trail -= 1) {
                 const trailProgress = Math.max(0, progress - trail * 0.035)
-                const position = curvePoint(origin, point, trailProgress)
-                particles.circle(position.x + driftX * 0.35, position.y + driftY * 0.35, trail === 0 ? 3.2 : 1.5)
-                particles.fill({ color: point.accent, alpha: (trail === 0 ? 0.95 : 0.32) - trail * 0.05 })
+                const position = curvePoint(source, target, trailProgress)
+                particles.circle(position.x + driftX * 0.35, position.y + driftY * 0.35, trail === 0 ? (edgeMode === "production" ? 4.5 : 4) : 2)
+                particles.fill({ color: source.accent, alpha: (trail === 0 ? (edgeMode === "production" ? 1 : 0.9) : 0.38) - trail * 0.05 })
               }
               if (mode !== "detail") {
-                flow.circle(packetX, packetY, 8)
-                flow.fill({ color: point.accent, alpha: 0.09 })
+                flow.circle(packetX, packetY, edgeMode === "production" ? 10 : 8)
+                flow.fill({ color: source.accent, alpha: edgeMode === "production" ? 0.14 : 0.12 })
                 flow.moveTo(packetX, packetY)
                 flow.lineTo(nextPacket.x + driftX * 0.35, nextPacket.y + driftY * 0.35)
-                flow.stroke({ color: point.accent, alpha: 0.8, width: 1.5 })
+                flow.stroke({ color: source.accent, alpha: 0.95, width: 2 })
               }
             }
 
             if (mode !== "detail") {
               const arrival = 0.5 + Math.sin(motion * 2.2 + index) * 0.5
-              marks.circle(point.x + driftX * 0.35, point.y + driftY * 0.35, 5 + arrival * 5)
-              marks.stroke({ color: point.accent, alpha: 0.12 + arrival * 0.2, width: 1 })
-              marks.moveTo(point.x - 5 + driftX * 0.35, point.y - 4 + driftY * 0.35)
-              marks.lineTo(point.x + driftX * 0.35, point.y + driftY * 0.35)
-              marks.lineTo(point.x - 5 + driftX * 0.35, point.y + 4 + driftY * 0.35)
-              marks.stroke({ color: point.accent, alpha: 0.24 + arrival * 0.25, width: 1.2 })
+              marks.circle(target.x + driftX * 0.35, target.y + driftY * 0.35, 5 + arrival * 5)
+              marks.stroke({ color: target.accent, alpha: 0.12 + arrival * 0.2, width: 1 })
+              marks.moveTo(target.x - 5 + driftX * 0.35, target.y - 4 + driftY * 0.35)
+              marks.lineTo(target.x + driftX * 0.35, target.y + driftY * 0.35)
+              marks.lineTo(target.x - 5 + driftX * 0.35, target.y + 4 + driftY * 0.35)
+              marks.stroke({ color: target.accent, alpha: 0.24 + arrival * 0.25, width: 1.2 })
             }
           })
         }
@@ -197,13 +227,6 @@ const nodeCount = mode === "detail" ? detailNodes.length + 1 : graphProjects.len
           }
         })
 
-        if (mode !== "detail" && origin && !reducedMotion) {
-          const sourceBreath = Math.sin(motion * 1.8) * 0.5 + 0.5
-          marks.circle(origin.x + driftX * 0.35, origin.y + driftY * 0.35, 7 + sourceBreath * 3)
-          marks.stroke({ color: origin.accent, alpha: 0.18 + sourceBreath * 0.12, width: 1 })
-          marks.circle(origin.x + driftX * 0.35, origin.y + driftY * 0.35, 3.5 + sourceBreath)
-          marks.fill({ color: origin.accent, alpha: 0.75 })
-        }
       }
 
       const render = () => draw(performance.now())
@@ -221,7 +244,7 @@ const nodeCount = mode === "detail" ? detailNodes.length + 1 : graphProjects.len
         pulse = 1
         nodes.forEach((candidate) => candidate.classList.toggle("is-selected", candidate === node))
         if (mode === "dashboard") {
-          const item = data.find((entry: { slug: string }) => entry.slug === node.dataset.projectSlug)
+          const item = data.projects.find((entry) => entry.slug === node.dataset.projectSlug)
           if (item) {
             graph.querySelector<HTMLElement>(`#${graphId}-emoji`)!.textContent = item.emoji
             graph.querySelector<HTMLElement>(`#${graphId}-name`)!.textContent = item.name

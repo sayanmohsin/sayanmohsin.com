@@ -1,6 +1,7 @@
 ---
 import type { Project } from "../data/projects"
-import { getProjectAccent, getProjectStatus } from "../lib/projectPresentation"
+import { projects } from "../data/projects"
+import { getProjectAccent, getProjectStatus, getTechnologyColor } from "../lib/projectPresentation"
 import TechnologyMark from "./TechnologyMark.astro"
 
 interface Props {
@@ -20,11 +21,33 @@ const accent = getProjectAccent(project)
   <div class="project-detail-overview__section">
     <p class="eyebrow">built with</p>
     <div class="project-detail-overview__tags mono">
-      {project.tags.map((tag) => (
-        <span><TechnologyMark label={tag} />{tag}</span>
+      {project.technologies.map((technology) => (
+        <span style={`--technology-color: ${getTechnologyColor(technology.name)}`}>
+          <TechnologyMark label={technology.name} mark={technology.mark} />
+          <span>{technology.name}</span>
+          <small class="project-detail-overview__technology-role">{technology.role}</small>
+        </span>
       ))}
     </div>
   </div>
+
+  {project.integrations && project.integrations.length > 0 && (
+    <div class="project-detail-overview__section project-detail-overview__connections">
+      <p class="eyebrow">how it connects</p>
+      <ul>
+        {project.integrations.map((integration) => {
+          const target = projects.find((candidate) => candidate.slug === integration.targetSlug)
+          return (
+            <li class={`integration-mode--${integration.mode}`}>
+              <a href={`/projects/${integration.targetSlug}`}>{target?.name ?? integration.targetSlug}</a>
+              <span class="integration-mode mono">{integration.mode}</span>
+              <span>{integration.label} — {integration.description}</span>
+            </li>
+          )
+        })}
+      </ul>
+    </div>
+  )}
 
   {project.metrics && project.metrics.length > 0 && (
     <div class="project-detail-overview__metrics">
