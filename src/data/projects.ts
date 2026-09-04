@@ -160,6 +160,7 @@ export const projects: Project[] = [
       { type: "website", url: "https://sayanmohsin.github.io/nice-code/", label: "documentation" },
       { type: "npm", url: "https://www.npmjs.com/package/@sayanmohsin/nice-code", label: "@sayanmohsin/nice-code on npm" },
       { type: "download", url: "https://github.com/sayanmohsin/nice-code/releases/latest", label: "GitHub Releases" },
+      { type: "website", url: "https://dev.to/sayanmohsin/when-code-looks-fine-but-isnt-building-nice-code-for-evidence-based-review-212b", label: "Dev.to article" },
     ],
     featured: true,
     status: "open source · v0.1.11",
