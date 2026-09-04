@@ -124,6 +124,7 @@ export const projects: Project[] = [
       { type: "website", url: "https://sayanmohsin.github.io/arqen/", label: "documentation" },
       { type: "crate", url: "https://crates.io/crates/arqen", label: "arqen on crates.io" },
       { type: "website", url: "https://docs.rs/arqen", label: "Rust API docs" },
+      { type: "website", url: "https://dev.to/sayanmohsin/why-i-built-arqen-giving-backend-infrastructure-a-clear-home-in-rust-429l", label: "Dev.to article" },
     ],
     featured: true,
     status: "in active use",
