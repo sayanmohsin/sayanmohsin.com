@@ -33,6 +33,8 @@ const appSchemas: Record<string, Record<string, unknown>> = {
     applicationCategory: "DeveloperApplication",
     description: "Open-source Rust data engine with persistent storage, durable queues, event streams, full-text search, graph links, and MCP access.",
     author: { "@type": "Person", name: "Sayan Mohsin" },
+    programmingLanguage: ["Rust", "TypeScript"],
+    license: "https://github.com/sayanmohsin/thingd/blob/main/LICENSE",
   },
   "thingd-cloud": {
     "@type": "WebApplication",
@@ -50,6 +52,16 @@ const appSchemas: Record<string, Record<string, unknown>> = {
     programmingLanguage: "Rust",
     url: "https://sayanmohsin.github.io/arqen/",
     sameAs: ["https://github.com/sayanmohsin/arqen"],
+  },
+  "nice-code": {
+    "@type": "SoftwareApplication",
+    name: "Nice Code",
+    applicationCategory: "DeveloperApplication",
+    description: "Rust-powered engineering guardrails and a Node-compatible CLI for source-backed code review findings.",
+    author: { "@type": "Person", name: "Sayan Mohsin" },
+    programmingLanguage: ["Rust", "JavaScript"],
+    license: "https://github.com/sayanmohsin/nice-code/blob/main/LICENSE",
+    url: "https://sayanmohsin.github.io/nice-code/",
   },
   "go-feather-route": {
     "@type": "SoftwareApplication",
@@ -87,12 +99,16 @@ const appSchemas: Record<string, Record<string, unknown>> = {
   },
 }
 
-const schema = appSchemas[project.slug]
+const appSchema = appSchemas[project.slug]
+const schema = appSchema
   ? {
-      ...appSchemas[project.slug],
+      ...appSchema,
       description: project.description,
       keywords: project.technologies.map((technology) => technology.name).join(", "),
-      sameAs: project.links?.filter((link) => link.type === "github").map((link) => link.url),
+      sameAs: [
+        ...(Array.isArray(appSchema.sameAs) ? (appSchema.sameAs as string[]) : []),
+        ...(project.links?.map((link) => link.url) ?? []),
+      ].filter((url, index, urls) => urls.indexOf(url) === index),
     }
   : undefined
 

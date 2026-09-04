@@ -1,4 +1,4 @@
-export type LinkType = "github" | "website" | "appstore" | "playstore" | "download"
+export type LinkType = "github" | "website" | "npm" | "crate" | "appstore" | "playstore" | "download"
 
 export interface ProjectLink {
   type: LinkType
@@ -54,6 +54,12 @@ export const projects: Project[] = [
       { type: "github", url: "https://github.com/sayanmohsin/thingd" },
       { type: "website", url: "https://engine.thingd.cloud" },
       { type: "website", url: "https://thingd.cloud" },
+      { type: "npm", url: "https://www.npmjs.com/package/@thingd/sdk", label: "@thingd/sdk on npm" },
+      { type: "npm", url: "https://www.npmjs.com/package/@thingd/client", label: "@thingd/client on npm" },
+      { type: "npm", url: "https://www.npmjs.com/package/@thingd/native", label: "@thingd/native on npm" },
+      { type: "npm", url: "https://www.npmjs.com/package/@thingd/cli", label: "@thingd/cli on npm" },
+      { type: "crate", url: "https://crates.io/crates/thingd", label: "thingd on crates.io" },
+      { type: "website", url: "https://docs.rs/thingd", label: "Rust API docs" },
     ],
     featured: true,
     status: "early prototype",
@@ -73,7 +79,7 @@ export const projects: Project[] = [
     ],
     accent: "#e4572e",
     relatedSlugs: ["clipbuf", "dartcam", "goodone-watch"],
-    metrics: [{ value: "0.x", label: "release track" }, { value: "49", label: "sdk tools" }],
+    metrics: [{ value: "0.86.4", label: "current release" }, { value: "49", label: "sdk tools" }],
   },
   {
     slug: "thingd-cloud",
@@ -116,6 +122,8 @@ export const projects: Project[] = [
     links: [
       { type: "github", url: "https://github.com/sayanmohsin/arqen", label: "GitHub" },
       { type: "website", url: "https://sayanmohsin.github.io/arqen/", label: "documentation" },
+      { type: "crate", url: "https://crates.io/crates/arqen", label: "arqen on crates.io" },
+      { type: "website", url: "https://docs.rs/arqen", label: "Rust API docs" },
     ],
     featured: true,
     status: "in active use",
@@ -137,7 +145,43 @@ export const projects: Project[] = [
     ],
     accent: "#3f8efc",
     relatedSlugs: ["goodone-watch", "thingd"],
-    metrics: [{ value: "0.14", label: "current release" }, { value: "5", label: "core boundaries" }],
+    metrics: [{ value: "0.18", label: "current release" }, { value: "5", label: "core boundaries" }],
+  },
+  {
+    slug: "nice-code",
+    name: "Nice Code",
+    tagline: "Engineering guardrails with evidence",
+    description: "A Rust-powered review tool and Node-compatible CLI for finding recurring engineering risks in human- and AI-written code.",
+    fullDescription: "Nice Code combines a Rust analysis engine with a Node-compatible launcher to catch recurring engineering risks that require more context than a compiler or linter can provide. It reviews operational context, async work, error handling, persistence changes, secret exposure, and unsupported performance claims, while keeping findings source-backed and compact. The public npm package provides the matching launcher and downloads verified platform binaries; Nice Code complements a project's native tooling rather than replacing it.",
+    emoji: "✓",
+    links: [
+      { type: "github", url: "https://github.com/sayanmohsin/nice-code", label: "GitHub" },
+      { type: "website", url: "https://sayanmohsin.github.io/nice-code/", label: "documentation" },
+      { type: "npm", url: "https://www.npmjs.com/package/@sayanmohsin/nice-code", label: "@sayanmohsin/nice-code on npm" },
+      { type: "download", url: "https://github.com/sayanmohsin/nice-code/releases/latest", label: "GitHub Releases" },
+    ],
+    featured: true,
+    status: "open source · v0.1.11",
+    tags: ["static analysis", "engineering guardrails", "developer tooling"],
+    technologies: [
+      { name: "Rust", role: "runtime", mark: "rs" },
+      { name: "Node.js", role: "runtime", mark: "js" },
+      { name: "CLI", role: "client", mark: "cli" },
+      { name: "Tree-sitter", role: "library", mark: "ts" },
+    ],
+    integrations: [
+      { targetSlug: "thingd", label: "engineering checks", mode: "local", description: "Nice Code is used as a repository-local quality gate while developing the Thingd engine and packages." },
+      { targetSlug: "arqen", label: "engineering checks", mode: "local", description: "Arqen uses Nice Code as an explicit repository check alongside Rust and documentation validation." },
+    ],
+    highlights: [
+      "Rust analysis engine with a Node-compatible public launcher",
+      "Source-backed findings for async, operations, persistence, security, and performance claims",
+      "CI-friendly output with compact reports, baselines, and native-tool status separation",
+      "Verified platform binaries distributed through GitHub Releases and npm",
+    ],
+    accent: "#f2b84b",
+    relatedSlugs: ["thingd", "arqen"],
+    metrics: [{ value: "0.1.11", label: "current release" }, { value: "Rust", label: "analysis engine" }],
   },
   {
     slug: "go-feather-route",
@@ -153,10 +197,10 @@ export const projects: Project[] = [
       { type: "website", url: "https://hub.docker.com/r/sayanmohsin/go-feather-route", label: "Docker image" },
     ],
     featured: true,
-    status: "open source",
+    status: "open source · v0.1.0",
     tags: ["model gateway", "routing", "streaming"],
     technologies: [
-      { name: "Go 1.26", role: "runtime", mark: "go" },
+      { name: "Go 1.27", role: "runtime", mark: "go" },
       { name: "Docker", role: "deployment", mark: "dk" },
     ],
     highlights: [
@@ -167,7 +211,7 @@ export const projects: Project[] = [
     ],
     accent: "#50c878",
     relatedSlugs: [],
-    metrics: [{ value: "SSE", label: "streaming" }, { value: "1", label: "focused boundary" }],
+    metrics: [{ value: "0.1.0", label: "current release" }, { value: "SSE", label: "streaming" }],
   },
   {
     slug: "goodone-watch",
