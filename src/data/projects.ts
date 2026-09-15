@@ -79,7 +79,7 @@ export const projects: Project[] = [
     ],
     accent: "#e4572e",
     relatedSlugs: ["clipbuf", "dartcam", "goodone-watch"],
-    metrics: [{ value: "0.86.4", label: "current release" }, { value: "49", label: "sdk tools" }],
+    metrics: [{ value: "0.87.0", label: "current release" }, { value: "49", label: "sdk tools" }],
   },
   {
     slug: "thingd-cloud",
@@ -146,7 +146,7 @@ export const projects: Project[] = [
     ],
     accent: "#3f8efc",
     relatedSlugs: ["goodone-watch", "thingd"],
-    metrics: [{ value: "0.18", label: "current release" }, { value: "5", label: "core boundaries" }],
+    metrics: [{ value: "0.20.2", label: "current release" }, { value: "5", label: "core boundaries" }],
   },
   {
     slug: "nice-code",
@@ -163,7 +163,7 @@ export const projects: Project[] = [
       { type: "website", url: "https://dev.to/sayanmohsin/when-code-looks-fine-but-isnt-building-nice-code-for-evidence-based-review-212b", label: "Dev.to article" },
     ],
     featured: true,
-    status: "open source · v0.1.11",
+    status: "open source · v0.3.2",
     tags: ["static analysis", "engineering guardrails", "developer tooling"],
     technologies: [
       { name: "Rust", role: "runtime", mark: "rs" },
@@ -183,7 +183,7 @@ export const projects: Project[] = [
     ],
     accent: "#f2b84b",
     relatedSlugs: ["thingd", "arqen"],
-    metrics: [{ value: "0.1.11", label: "current release" }, { value: "Rust", label: "analysis engine" }],
+    metrics: [{ value: "0.3.2", label: "current release" }, { value: "Rust", label: "analysis engine" }],
   },
   {
     slug: "go-feather-route",
@@ -199,7 +199,7 @@ export const projects: Project[] = [
       { type: "website", url: "https://hub.docker.com/r/sayanmohsin/go-feather-route", label: "Docker image" },
     ],
     featured: true,
-    status: "open source · v0.1.0",
+    status: "open source · v0.1.7",
     tags: ["model gateway", "routing", "streaming"],
     technologies: [
       { name: "Go 1.27", role: "runtime", mark: "go" },
@@ -213,7 +213,7 @@ export const projects: Project[] = [
     ],
     accent: "#50c878",
     relatedSlugs: [],
-    metrics: [{ value: "0.1.0", label: "current release" }, { value: "SSE", label: "streaming" }],
+    metrics: [{ value: "0.1.7", label: "current release" }, { value: "SSE", label: "streaming" }],
   },
   {
     slug: "goodone-watch",

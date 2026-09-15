@@ -23,10 +23,11 @@ const requiredLinks = {
 }
 const requiredMetadata = [
   'slug: "arqen"',
-  'value: "0.18"',
+  'value: "0.20.2"',
   'slug: "nice-code"',
-  'status: "open source · v0.1.11"',
-  'value: "0.86.4"',
+  'status: "open source · v0.3.2"',
+  'value: "0.87.0"',
+  'status: "open source · v0.1.7"',
 ]
 
 const missingProjects = required.filter((slug) => !slugs.includes(slug))
