@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises"
 const source = await readFile(new URL("../src/data/projects.ts", import.meta.url), "utf8")
 const slugs = [...source.matchAll(/slug:\s*["`]([^"`]+)["`]/g)].map((match) => match[1])
 const targets = [...source.matchAll(/targetSlug:\s*["`]([^"`]+)["`]/g)].map((match) => match[1])
-const required = ["thingd", "thingd-cloud", "arqen", "nice-code", "go-feather-route", "goodone-watch", "clipbuf", "dartcam"]
+const required = ["thingd", "thingd-cloud", "arqen", "nice-code", "open-envault", "go-feather-route", "goodone-watch", "clipbuf", "dartcam"]
 const requiredLinks = {
   thingd: [
     "https://www.npmjs.com/package/@thingd/sdk",
@@ -20,13 +20,23 @@ const requiredLinks = {
     "https://www.npmjs.com/package/@sayanmohsin/nice-code",
     "https://github.com/sayanmohsin/nice-code/releases/latest",
   ],
+  "open-envault": [
+    "https://github.com/sayanmohsin/open-envault",
+    "https://crates.io/crates/open-envault",
+    "https://docs.rs/open-envault",
+    "https://www.npmjs.com/package/open-envault",
+    "https://github.com/sayanmohsin/open-envault/releases",
+  ],
 }
 const requiredMetadata = [
   'slug: "arqen"',
   'value: "0.20.2"',
   'slug: "nice-code"',
   'status: "open source · v0.3.2"',
-  'value: "0.87.0"',
+  'slug: "open-envault"',
+  'status: "open source · v0.4.0"',
+  'value: "0.4.0"',
+  'value: "0.91.1"',
   'status: "open source · v0.1.7"',
 ]
 
